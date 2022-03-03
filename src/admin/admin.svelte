@@ -302,6 +302,7 @@
   <HeaderUtilities>
     <HeaderAction>
       <HeaderPanelLinks>
+        <HeaderPanelLink href="/">回到提问箱</HeaderPanelLink>
         <HeaderPanelLink on:click={logout}>注销</HeaderPanelLink>
       </HeaderPanelLinks>
     </HeaderAction>
