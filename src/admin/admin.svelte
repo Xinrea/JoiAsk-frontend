@@ -176,7 +176,7 @@
   function setConfig() {
     let data = new FormData()
     data.append('announcement', announcement)
-    fetch('ENDPOINT/config', {
+    fetch('ENDPOINT/auth/config', {
       credentials: 'include',
       method: 'POST',
       body: data

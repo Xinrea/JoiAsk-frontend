@@ -45,10 +45,8 @@ export default {
   plugins: [
     replace({
       values: {
-        ENDPOINT: production
-          ? 'https://ask.api.vjoi.cn'
-          : 'http://127.0.0.1:8080',
-        OSS: 'https://jwebsite-storage.oss-accelerate.aliyuncs.com'
+        ENDPOINT: production ? 'https://api.vjoi.cn' : 'http://127.0.0.1:8080',
+        OSS: 'https://jclub-upload.oss-accelerate.aliyuncs.com'
       }
     }),
     svelte({
