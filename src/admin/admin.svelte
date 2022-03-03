@@ -127,7 +127,7 @@
     model.message = message
   }
   function getConfig() {
-    fetch('ENDPOINT/v1/config', {
+    fetch('ENDPOINT/config', {
       method: 'GET'
     })
       .then((res) => res.json())
@@ -139,7 +139,7 @@
       })
   }
   function getQuestions() {
-    fetch('ENDPOINT/v1/auth/questions', {
+    fetch('ENDPOINT/auth/questions', {
       credentials: 'include',
       method: 'POST',
       body: getTableConfig()
@@ -155,7 +155,7 @@
   }
 
   function getTags() {
-    fetch('ENDPOINT/v1/auth/tags', {
+    fetch('ENDPOINT/auth/tags', {
       credentials: 'include',
       method: 'GET'
     })
@@ -176,7 +176,7 @@
   function setConfig() {
     let data = new FormData()
     data.append('announcement', announcement)
-    fetch('ENDPOINT/v1/config', {
+    fetch('ENDPOINT/config', {
       credentials: 'include',
       method: 'POST',
       body: data
@@ -196,7 +196,7 @@
   function deleteQuestion(id) {
     let data = new FormData()
     data.append('id', id)
-    fetch('ENDPOINT/v1/auth/questions', {
+    fetch('ENDPOINT/auth/questions', {
       credentials: 'include',
       method: 'DELETE',
       body: data
@@ -221,7 +221,7 @@
     let data = new FormData()
     data.append('username', loginInfo.username)
     data.append('password', loginInfo.password)
-    fetch('ENDPOINT/v1/login', {
+    fetch('ENDPOINT/login', {
       credentials: 'include',
       method: 'POST',
       body: data
@@ -241,7 +241,7 @@
   }
 
   function logout() {
-    fetch('ENDPOINT/v1/logout', {
+    fetch('ENDPOINT/logout', {
       credentials: 'include',
       method: 'GET'
     })
@@ -257,7 +257,7 @@
   }
 
   function auth() {
-    fetch('ENDPOINT/v1/auth', {
+    fetch('ENDPOINT/auth/login', {
       credentials: 'include',
       method: 'GET'
     })
@@ -276,7 +276,7 @@
   }
   auth()
   function checkChange(e, id, key) {
-    fetch('ENDPOINT/v1/auth/questions', {
+    fetch('ENDPOINT/auth/questions', {
       credentials: 'include',
       method: 'PUT',
       body: JSON.stringify({

@@ -4,7 +4,7 @@
   let taglist = []
   getTagDetailList()
   function getTagDetailList() {
-    return fetch('ENDPOINT/v1/tags?detail=true')
+    return fetch('ENDPOINT/tags?detail=true')
       .then((res) => res.json())
       .then((res) => {
         if (res.code === 0) {

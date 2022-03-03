@@ -9,7 +9,7 @@
   let page = 1
   queryQuestions()
   function queryQuestions() {
-    fetch('ENDPOINT/v1/tag?tag_id=' + tag)
+    fetch('ENDPOINT/tag?tag_id=' + tag)
       .then((response) => response.json())
       .then((res) => {
         if (res.code === 0) {
@@ -20,7 +20,7 @@
       })
   }
   function queryCards({ detail: { loaded, complete } }) {
-    fetch(`ENDPOINT/v1/questions?tag_id=${tag}&page=${page}&size=5`)
+    fetch(`ENDPOINT/questions?tag_id=${tag}&page=${page}&size=5`)
       .then((response) => response.json())
       .then((res) => {
         console.log(res)

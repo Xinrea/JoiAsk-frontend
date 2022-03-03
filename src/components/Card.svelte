@@ -17,7 +17,7 @@
   let liked = false
   let hasImage = data.images != ''
   function like() {
-    fetch('ENDPOINT/v1/like?id=' + data.id, {
+    fetch('ENDPOINT/like?id=' + data.id, {
       method: 'GET'
     }).then((res) => {})
   }
