@@ -38,7 +38,7 @@
         <div class="card__footer__id">#{data.id}</div>
         <div
           class="card__footer__tag"
-          on:click={() => router.goto('/tags?tag=' + data.tag_name)}
+          on:click={() => router.goto('/tags?tag=' + data.tag_id)}
         >
           #{data.tag_name}
         </div>
