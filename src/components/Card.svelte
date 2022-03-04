@@ -93,10 +93,11 @@
   .card {
     position: relative;
     flex-direction: column;
-    border: 1px solid white;
+    border: 1px solid #dfdfdf;
     border-radius: 6px;
     background-color: #ffa726;
     transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
+    z-index: 2;
   }
 
   .card.archive {
@@ -113,12 +114,11 @@
     }
     .pic_indicator {
       transform: rotateZ(-90deg) !important;
-      top: -50px !important;
+      top: -20px !important;
       left: 0;
     }
-
     .pic_indicator:hover {
-      box-shadow: 5px 0 2px rgba(0, 0, 0, 0.116);
+      top: -40px !important;
     }
   }
 
@@ -127,34 +127,37 @@
   }
 
   .rainbow {
-    background: linear-gradient(
+    background-image: linear-gradient(
       130deg,
       #dc5de783 0%,
       #7fefbd8e 33%,
       #fff5898c 66%,
       #ec0b4398 100%
     );
+    background-color: #f8ddb4;
   }
 
   .pic_indicator {
     position: absolute;
     top: 10px;
-    right: -60px;
+    right: -50px;
     cursor: pointer;
     align-items: center;
-    justify-content: center;
-    width: 60px;
+    justify-content: flex-end;
+    padding: 0 10px;
+    width: 100px;
     height: 40px;
     color: white;
     background-color: #e65100;
-    border: 1px solid white;
+    border: 1px solid #dfdfdf;
     border-left: none;
     border-radius: 0 5px 5px 0;
     transition: all 0.2s ease-in-out;
+    z-index: 1;
   }
 
   .pic_indicator:hover {
-    box-shadow: 5px 0 2px rgba(0, 0, 0, 0.116);
+    right: -70px;
   }
 
   .card__front {
