@@ -14,8 +14,7 @@
   let checkedRainbow = false
   let checkedImage = false
 
-  let announcement =
-    '投稿会在审核后放出，请耐心等待<br>如果对提问箱有任何意见或建议，请使用 #反馈 投稿'
+  let announcement = ''
   onMount(() => {
     autosize(document.querySelector('textarea'))
     initTagSelection()
@@ -27,6 +26,8 @@
   import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
   import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
   import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
+  import 'filepond/dist/filepond.min.css'
+  import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
   registerPlugin(
     FilePondPluginImageExifOrientation,
     FilePondPluginImagePreview,
@@ -354,5 +355,10 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
   }
 </style>

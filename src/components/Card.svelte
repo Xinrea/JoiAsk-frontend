@@ -93,7 +93,7 @@
   .card {
     position: relative;
     flex-direction: column;
-    border: 1px solid rgba(0, 0, 0, 0.125);
+    border: 1px solid white;
     border-radius: 6px;
     background-color: #ffa726;
     transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
@@ -147,7 +147,8 @@
     height: 40px;
     color: white;
     background-color: #e65100;
-    border: 1px solid rgba(0, 0, 0, 0.125);
+    border: 1px solid white;
+    border-left: none;
     border-radius: 0 5px 5px 0;
     transition: all 0.2s ease-in-out;
   }
