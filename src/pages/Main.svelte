@@ -192,8 +192,7 @@
     display: flex;
   }
   .announcement {
-    align-items: center;
-    font-size: small;
+    padding: 5px 0;
   }
   .rainbow textarea {
     background: linear-gradient(
@@ -297,6 +296,7 @@
     align-items: flex-start;
   }
   label {
+    font-size: medium;
     cursor: pointer;
     align-items: center;
     justify-content: space-between;
@@ -315,8 +315,8 @@
     margin-right: 5px;
     font: inherit;
     color: orange;
-    width: 1.15em;
-    height: 1.15em;
+    width: 1.4em;
+    height: 1.4em;
     border-radius: 0.15em;
     display: grid;
     place-content: center;
@@ -324,8 +324,8 @@
 
   input[type='checkbox']::before {
     content: '';
-    width: 0.65em;
-    height: 0.65em;
+    width: 0.8em;
+    height: 0.8em;
     transform: scale(0);
     transition: 120ms transform ease-in-out;
     box-shadow: inset 1em 1em #ffb74d;
@@ -355,6 +355,7 @@
   }
 
   pre {
+    font-size: medium;
     white-space: pre-wrap;
     word-wrap: break-word;
   }
