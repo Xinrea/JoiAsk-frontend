@@ -44,7 +44,6 @@
     fetch(`ENDPOINT/questions?page=${page}&size=5`)
       .then((res) => res.json())
       .then((res) => {
-        console.log(res)
         cards = cards.concat(res.data)
         page++
         if (res.data.length < 5) {
@@ -74,7 +73,6 @@
       return
     }
     let data = new FormData()
-    console.log(tagValue)
     if (tagValue) {
       data.append('tag', tagValue.value)
     } else {
@@ -113,7 +111,6 @@
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res)
         if (res.code === 0) {
           announcement = res.data.announcement
         }

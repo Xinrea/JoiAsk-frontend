@@ -150,6 +150,9 @@
         if (res.code === 0) {
           tableData = res.data.questions
           pagination.total_length = res.data.total
+          res.data.questions.forEach((e) => {
+            tagCache[e.id] = e.tag_name
+          })
         }
       })
   }
@@ -287,9 +290,33 @@
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res)
         if (res.code !== 0) {
           showModel(res.message)
+        }
+      })
+  }
+  let tagCache = {}
+  function updateTag(id) {
+    fetch('ENDPOINT/auth/questions', {
+      credentials: 'include',
+      method: 'PUT',
+      body: JSON.stringify({
+        id: id,
+        key: '_tag',
+        value: tagCache[id]
+      })
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.code !== 0) {
+          showModel(res.message)
+        } else {
+          showModel('修改成功')
+          tableData.forEach((e) => {
+            if (e.id === id) {
+              e.tag_name = tagCache[id]
+            }
+          })
         }
       })
   }
@@ -428,6 +455,21 @@
                 <svelte:fragment slot="expanded-row" let:row>
                   <Grid padding>
                     <Row>
+                      <FormGroup legendText="话题">
+                        <Row>
+                          <TextInput
+                            placeholder="输入话题"
+                            hideLabel
+                            size="sm"
+                            bind:value={tagCache[row.id]}
+                          />
+                          <Button size="small" on:click={updateTag(row.id)}
+                            >保存</Button
+                          ></Row
+                        >
+                      </FormGroup>
+                    </Row>
+                    <Row>
                       <FormGroup legendText="内容">
                         <pre>{row.content}</pre>
                       </FormGroup>
@@ -435,7 +477,6 @@
                     <Row>
                       <FormGroup legendText="相关信息">
                         <Tag type="high-contrast">ID：{row.id}</Tag>
-                        <Tag type="high-contrast">话题：{row.tag_name}</Tag>
                         <Tag type="high-contrast">点赞数：{row.likes}</Tag>
                         <Tag type="high-contrast">图片数：{row.images_num}</Tag>
                       </FormGroup>
