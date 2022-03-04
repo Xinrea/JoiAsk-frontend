@@ -5,8 +5,7 @@
   let navroutes = {
     提问: '/',
     话题: '/tags',
-    彩虹屁: '/rainbow',
-    管理: '/admin'
+    彩虹屁: '/rainbow'
   }
 
   function changeCurrent(event) {
@@ -20,12 +19,6 @@
   <TitleButton content="提问" {current} on:click={changeCurrent} />
   <TitleButton content="话题" {current} on:click={changeCurrent} />
   <TitleButton content="彩虹屁" {current} on:click={changeCurrent} />
-  <TitleButton
-    content="管理"
-    {current}
-    on:click={changeCurrent}
-    style="margin-left: auto"
-  />
 </div>
 
 <style>
