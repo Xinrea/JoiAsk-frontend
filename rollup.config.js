@@ -45,7 +45,9 @@ export default {
   plugins: [
     replace({
       values: {
-        ENDPOINT: production ? 'https://api.vjoi.cn' : 'http://127.0.0.1:8080',
+        ENDPOINT: production
+          ? 'https://api.ask.vjoi.cn'
+          : 'http://127.0.0.1:8080',
         OSS: 'https://jclub-upload.oss-accelerate.aliyuncs.com'
       }
     }),
