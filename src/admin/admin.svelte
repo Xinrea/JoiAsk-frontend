@@ -24,10 +24,7 @@
     SelectItem,
     Toolbar,
     ToolbarContent,
-    ToolbarSearch,
     ImageLoader,
-    Tile,
-    Link,
     Tag,
     Grid,
     Row,
@@ -322,7 +319,7 @@
   }
 </script>
 
-<Header company="JOIASK" platformName="管理后台">
+<Header company="JOIASK" platformName="提问箱管理后台">
   <svelte:fragment slot="skip-to-content">
     <SkipToContent />
   </svelte:fragment>
