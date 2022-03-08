@@ -296,7 +296,7 @@
     align-items: flex-start;
   }
   label {
-    font-size: medium;
+    font-size: small;
     cursor: pointer;
     align-items: center;
     justify-content: space-between;
@@ -355,7 +355,8 @@
   }
 
   pre {
-    font-size: medium;
+    font-size: small;
+    line-height: normal;
     white-space: pre-wrap;
     word-wrap: break-word;
   }
