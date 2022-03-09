@@ -241,7 +241,7 @@
   }
 
   function logout() {
-    fetch('ENDPOINT/logout', {
+    fetch('ENDPOINT/auth/logout', {
       credentials: 'include',
       method: 'GET'
     })
