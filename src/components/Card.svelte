@@ -167,6 +167,7 @@
   }
 
   .card__content {
+    line-height: normal;
     position: relative;
     white-space: pre-wrap;
     word-break: break-word;
