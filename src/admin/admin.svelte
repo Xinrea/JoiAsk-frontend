@@ -468,7 +468,7 @@
                     </Row>
                     <Row>
                       <FormGroup legendText="内容">
-                        <pre>{row.content}</pre>
+                        <pre class="preview">{row.content}</pre>
                       </FormGroup>
                     </Row>
                     <Row>
@@ -561,4 +561,9 @@
 
 <style>
   @import 'white.css';
+  .preview {
+    word-break: break-word;
+    white-space: break-spaces;
+    line-height: normal;
+  }
 </style>
