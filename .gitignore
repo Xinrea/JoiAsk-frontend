@@ -1,4 +1,4 @@
 node_modules
 old
 public/build/*
-.DS_Store
+**/.DS_Store
