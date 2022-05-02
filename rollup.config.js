@@ -46,8 +46,8 @@ export default {
     replace({
       values: {
         ENDPOINT: production
-          ? 'https://api.ask.vjoi.cn'
-          : 'http://127.0.0.1:8080',
+          ? 'https://ask.vjoi.cn/api/'
+          : 'http://127.0.0.1:8080/api/',
         OSS: 'https://i0.vjoi.cn'
       }
     }),
