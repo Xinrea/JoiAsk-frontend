@@ -8,7 +8,8 @@ import sveltePreprocess from 'svelte-preprocess'
 import replace from '@rollup/plugin-replace'
 
 const production = !process.env.ROLLUP_WATCH
-const debug = true
+const site = process.env.SITE
+const oss = process.env.OSS
 
 function serve() {
   let server
@@ -46,10 +47,8 @@ export default {
   plugins: [
     replace({
       values: {
-        ENDPOINT: !debug
-          ? 'https://ask.vjoi.cn/api'
-          : 'http://192.168.50.58:8080/api',
-        OSS: 'https://i0.vjoi.cn'
+        ENDPOINT: site+'/api',
+        OSS: oss
       }
     }),
     svelte({
