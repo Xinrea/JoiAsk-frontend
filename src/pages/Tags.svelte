@@ -8,7 +8,9 @@
       .then((res) => res.json())
       .then((res) => {
         if (res.code === 0) {
-          taglist = res.data
+          if (res.data !== null) {
+            taglist = res.data
+          }
         }
       })
   }
