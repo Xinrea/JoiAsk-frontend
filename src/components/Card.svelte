@@ -17,7 +17,7 @@
   let liked = false
   let hasImage = data.images != ''
   function like() {
-    fetch('ENDPOINT/like?id=' + data.id, {
+    fetch('/api/like?id=' + data.id, {
       method: 'GET'
     }).then((res) => {})
   }
@@ -74,7 +74,7 @@
     }}
     images={data.images.split(';').map((u) => {
       return {
-        src: 'OSS/' + u
+        src:  u
       }
     })}
   />

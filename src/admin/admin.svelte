@@ -124,7 +124,7 @@
     model.message = message
   }
   function getConfig() {
-    fetch('ENDPOINT/config', {
+    fetch('/api/config', {
       method: 'GET'
     })
       .then((res) => res.json())
@@ -136,7 +136,7 @@
       })
   }
   function getQuestions() {
-    fetch('ENDPOINT/auth/questions', {
+    fetch('/api/auth/questions', {
       credentials: 'include',
       method: 'POST',
       body: getTableConfig()
@@ -155,7 +155,7 @@
   }
 
   function getTags() {
-    fetch('ENDPOINT/auth/tags', {
+    fetch('/api/auth/tags', {
       credentials: 'include',
       method: 'GET'
     })
@@ -176,7 +176,7 @@
   function setConfig() {
     let data = new FormData()
     data.append('announcement', announcement)
-    fetch('ENDPOINT/auth/config', {
+    fetch('/api/auth/config', {
       credentials: 'include',
       method: 'POST',
       body: data
@@ -196,7 +196,7 @@
   function deleteQuestion(id) {
     let data = new FormData()
     data.append('id', id)
-    fetch('ENDPOINT/auth/questions', {
+    fetch('/api/auth/questions', {
       credentials: 'include',
       method: 'DELETE',
       body: data
@@ -221,7 +221,7 @@
     let data = new FormData()
     data.append('username', loginInfo.username)
     data.append('password', loginInfo.password)
-    fetch('ENDPOINT/login', {
+    fetch('/api/login', {
       credentials: 'include',
       method: 'POST',
       body: data
@@ -241,7 +241,7 @@
   }
 
   function logout() {
-    fetch('ENDPOINT/auth/logout', {
+    fetch('/api/auth/logout', {
       credentials: 'include',
       method: 'GET'
     })
@@ -257,7 +257,7 @@
   }
 
   function auth() {
-    fetch('ENDPOINT/auth/login', {
+    fetch('/api/auth/login', {
       credentials: 'include',
       method: 'GET'
     })
@@ -276,7 +276,7 @@
   }
   auth()
   function checkChange(e, id, key) {
-    fetch('ENDPOINT/auth/questions', {
+    fetch('/api/auth/questions', {
       credentials: 'include',
       method: 'PUT',
       body: JSON.stringify({
@@ -294,7 +294,7 @@
   }
   let tagCache = {}
   function updateTag(id) {
-    fetch('ENDPOINT/auth/questions', {
+    fetch('/api/auth/questions', {
       credentials: 'include',
       method: 'PUT',
       body: JSON.stringify({

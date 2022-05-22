@@ -41,7 +41,7 @@
   let cards = []
   let page = 1
   function fetchCards({ detail: { loaded, complete } }) {
-    fetch(`ENDPOINT/questions?page=${page}&size=5`)
+    fetch(`/api/questions?page=${page}&size=5`)
       .then((res) => res.json())
       .then((res) => {
         cards = cards.concat(res.data)
@@ -54,7 +54,7 @@
       })
   }
   function initTagSelection() {
-    fetch(`ENDPOINT/tags`)
+    fetch(`/api/tags`)
       .then((res) => res.json())
       .then((res) => {
         if (res.code === 0) {
@@ -91,7 +91,7 @@
         data.append('files[]', fs[i].file)
       }
     }
-    fetch(`ENDPOINT/questions`, {
+    fetch(`/api/questions`, {
       method: 'POST',
       body: data
     })
@@ -106,7 +106,7 @@
       })
   }
   function getConfig() {
-    fetch('ENDPOINT/config', {
+    fetch('/api/config', {
       method: 'GET'
     })
       .then((res) => res.json())

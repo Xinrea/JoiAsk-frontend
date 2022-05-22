@@ -6,7 +6,7 @@
   let cards = []
   let page = 1
   function fetchRainbows({ detail: { loaded, complete } }) {
-    fetch(`ENDPOINT/rainbows?page=${page}&size=5`)
+    fetch(`/api/rainbows?page=${page}&size=5`)
       .then((res) => res.json())
       .then((res) => {
         cards = cards.concat(res.data)
