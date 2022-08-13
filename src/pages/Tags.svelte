@@ -23,7 +23,9 @@
     {#each taglist as tag}
       <div class="taglist__item">
         <div class="taglist__item__header">
-          <a href="/tags?tag={tag.tag_id}">#{tag.tag_name}</a>
+          <a href="/tags?tag={tag.id}&tag_name={tag.tag_name}"
+            >#{tag.tag_name}</a
+          >
           <span class="taglist__count">投稿数：{tag.question_count}</span>
         </div>
         <div class="taglist_item_desc">{tag.description}</div>
