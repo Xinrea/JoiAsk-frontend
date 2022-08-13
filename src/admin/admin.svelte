@@ -447,7 +447,10 @@
   }
 </script>
 
-<div id="admin-wrapper" style="background-color: white; height: 100%;">
+<div
+  id="admin-wrapper"
+  style="background-color: white; min-height: 100%; height: auto;"
+>
   <Header company="JOIASK" platformName="提问箱管理后台">
     <svelte:fragment slot="skip-to-content">
       <SkipToContent />
