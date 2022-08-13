@@ -1,120 +1,121 @@
 <script>
-  import Navbar from '../components/Navbar.svelte'
-  import Select from 'svelte-select'
-  import autosize from 'autosize'
-  import Hashtag from '../components/Hashtag.svelte'
-  import TopButton from '../components/TopButton.svelte'
-  import Card from '../components/Card.svelte'
-  import { onMount } from 'svelte'
-  let askContent = ''
-  let items = [{ value: '轴问箱', label: '轴问箱' }]
+  import Navbar from "../components/Navbar.svelte";
+  import Select from "svelte-select";
+  import autosize from "autosize";
+  import Hashtag from "../components/Hashtag.svelte";
+  import TopButton from "../components/TopButton.svelte";
+  import Card from "../components/Card.svelte";
+  import { onMount } from "svelte";
+  let askContent = "";
+  let items = [{ value: 1, label: "提问箱" }];
 
-  let tagValue
-  let checkedHide = false
-  let checkedRainbow = false
-  let checkedImage = false
+  let tagValue;
+  let checkedHide = false;
+  let checkedRainbow = false;
+  let checkedImage = false;
 
-  let announcement = ''
+  let announcement = "";
   onMount(() => {
-    autosize(document.querySelector('textarea'))
-    initTagSelection()
-    getConfig()
-  })
+    autosize(document.querySelector("textarea"));
+    initTagSelection();
+    getConfig();
+  });
 
   // FilePond
-  import FilePond, { registerPlugin, supported } from 'svelte-filepond'
-  import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
-  import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
-  import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
-  import 'filepond/dist/filepond.min.css'
-  import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
+  import FilePond, { registerPlugin, supported } from "svelte-filepond";
+  import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+  import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+  import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+  import "filepond/dist/filepond.min.css";
+  import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
   registerPlugin(
     FilePondPluginImageExifOrientation,
     FilePondPluginImagePreview,
     FilePondPluginFileValidateType
-  )
-  let pond
-  let name = 'filepond'
+  );
+  let pond;
+  let name = "filepond";
 
   // Cards Fetch
-  import InfiniteLoading from 'svelte-infinite-loading'
-  let cards = []
-  let page = 1
+  import InfiniteLoading from "svelte-infinite-loading";
+  let cards = [];
+  let page = 1;
   function fetchCards({ detail: { loaded, complete } }) {
-    fetch(`/api/questions?page=${page}&size=5`)
+    fetch(`/api/question?page=${page}&size=5&publish=true`)
       .then((res) => res.json())
       .then((res) => {
-        cards = cards.concat(res.data)
-        page++
-        if (res.data.length < 5) {
-          complete()
+        cards = cards.concat(res.data.questions);
+        page++;
+        if (res.data.questions.length < 5) {
+          complete();
         } else {
-          loaded()
+          loaded();
         }
-      })
+      });
   }
   function initTagSelection() {
-    fetch(`/api/tags`)
+    fetch(`/api/tag`)
       .then((res) => res.json())
       .then((res) => {
-        if (res.code === 0) {
-          res.data.reverse()
+        if (res.code === 200) {
+          res.data.reverse();
           items = res.data.map((item) => {
-            return { value: item.tag_name, label: item.tag_name }
-          })
+            return { value: item, label: item.tag_name };
+          });
         }
-      })
+      });
   }
   function submitQuestion() {
     // Check Content
-    let postContent = askContent.replace(/^\s+|\s+$/g, '')
+    let postContent = askContent.replace(/^\s+|\s+$/g, "");
     if (postContent.length === 0) {
-      alert('请输入有效的提问内容')
-      return
+      alert("请输入有效的提问内容");
+      return;
     }
-    let data = new FormData()
+    let data = new FormData();
     if (tagValue) {
-      data.append('tag', tagValue.value)
+      data.append("tag_id", tagValue.value.id);
     } else {
-      data.append('tag', '轴问箱')
+      alert("请选择话题");
+      return;
     }
-    data.append('content', postContent)
+    data.append("content", postContent);
     if (checkedHide) {
-      data.append('hide', 'true')
+      data.append("hide", "true");
     }
     if (checkedRainbow) {
-      data.append('rainbow', 'true')
+      data.append("rainbow", "true");
     }
     if (checkedImage) {
-      let fs = pond.getFiles()
+      let fs = pond.getFiles();
       for (let i = 0; i < fs.length; i++) {
-        data.append('files[]', fs[i].file)
+        data.append("files[]", fs[i].file);
       }
     }
-    fetch(`/api/questions`, {
-      method: 'POST',
-      body: data
+    fetch(`/api/question`, {
+      method: "POST",
+      body: data,
     })
       .then((res) => res.json())
       .then((res) => {
-        if (res.code === 0) {
-          alert('问题提交成功')
-          window.location.reload()
+        if (res.code === 200) {
+          alert("提问已提交成功。提问将会在审核通过后显示。");
+          window.location.reload();
         } else {
-          alert(res.message)
+          alert(res.message);
         }
-      })
+      });
   }
   function getConfig() {
-    fetch('/api/config', {
-      method: 'GET'
+    fetch("/api/config", {
+      method: "GET",
     })
       .then((res) => res.json())
       .then((res) => {
-        if (res.code === 0) {
-          announcement = res.data.announcement
+        if (res.code === 200) {
+          announcement = res.data.announcement;
         }
-      })
+      });
   }
 </script>
 
@@ -123,22 +124,22 @@
 <div class="container">
   <div class="card_list">
     <div class="ask">
-      <div class="ask__content" class:rainbow={checkedRainbow}>
+      <div class="tag_select">
         <div class="themed">
           <Select
             id="topic"
             Icon={Hashtag}
             {items}
             bind:value={tagValue}
-            placeholder="输入/选择话题"
-            isCreatable
-            getOptionLabel={(option, filterText) => {
-              return option.isCreator
-                ? `新话题 \"${filterText}\"`
-                : option.label
-            }}
+            noOptionsMessage="没有相应的话题"
+            placeholder="选择话题"
           />
         </div>
+        {#if tagValue}
+          <pre>{tagValue.value.description}</pre>
+        {/if}
+      </div>
+      <div class="ask__content" class:rainbow={checkedRainbow}>
         <textarea
           id="content"
           class="ask__textarea"
@@ -172,8 +173,9 @@
           allowMultiple={true}
           credits={false}
           labelIdle="拖拽/点击添加图片(最多6张)"
-          acceptedFileTypes={['image/*']}
+          acceptedFileTypes={["image/*"]}
           maxFiles={6}
+          maxFileSize={1048576}
         />
       {/if}
       <button class="ask__submit" on:click={submitQuestion}>提交</button>
@@ -183,13 +185,23 @@
     {/each}
   </div>
   <InfiniteLoading on:infinite={fetchCards}>
-    <div class="info" slot="noMore">🍊已经到底啦🍊</div>
+    <div class="info" slot="noMore">已经到底啦( ´･･)ﾉ(._.`)</div>
+    <div class="info" slot="noResults">已经到底啦( ´･･)ﾉ(._.`)</div>
   </InfiniteLoading>
 </div>
 
 <style>
   div {
     display: flex;
+  }
+
+  .info {
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1rem;
   }
   .announcement {
     padding: 5px 0;
@@ -203,15 +215,14 @@
       #ec0b4398 100%
     );
   }
-
-  .rainbow .themed {
-    --background: rgba(252, 252, 252, 0.719);
+  .tag_select {
+    color: #ff9800;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
   }
-
   .themed {
-    position: absolute;
-    top: 10px;
-    left: 10px;
+    margin-bottom: 10px;
     display: block;
     width: 140px;
     font-size: 12px;
@@ -266,8 +277,8 @@
   }
   .ask__textarea {
     position: relative;
-    font-family: Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
-      'WenQuanYi Micro Hei', sans-serif;
+    font-family: Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+      "WenQuanYi Micro Hei", sans-serif;
     font-size: medium;
     resize: none;
     word-break: break-word;
@@ -291,6 +302,7 @@
     justify-content: space-between;
   }
   .allchecks {
+    color: #ff9800;
     flex-direction: column;
     justify-content: start;
     align-items: flex-start;
@@ -303,7 +315,7 @@
     display: flex;
     word-break: keep-all;
   }
-  input[type='checkbox'] {
+  input[type="checkbox"] {
     cursor: pointer;
     /* Add if not using autoprefixer */
     -webkit-appearance: none;
@@ -322,8 +334,8 @@
     place-content: center;
   }
 
-  input[type='checkbox']::before {
-    content: '';
+  input[type="checkbox"]::before {
+    content: "";
     width: 0.8em;
     height: 0.8em;
     transform: scale(0);
@@ -331,7 +343,7 @@
     box-shadow: inset 1em 1em #ffb74d;
   }
 
-  input[type='checkbox']:checked::before {
+  input[type="checkbox"]:checked::before {
     transform: scale(1);
   }
 
@@ -355,6 +367,7 @@
   }
 
   pre {
+    color: #ff9800;
     font-size: small;
     line-height: normal;
     white-space: pre-wrap;

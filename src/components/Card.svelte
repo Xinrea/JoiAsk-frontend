@@ -1,27 +1,37 @@
 <script>
-  import LikeIcon from './LikeIcon.svelte'
-  import { router } from 'tinro'
-  import FullCarousel from '../components/FullCarousel.svelte'
-  import moment from 'moment'
+  import LikeIcon from "./LikeIcon.svelte";
+  import { router } from "tinro";
+  import FullCarousel from "../components/FullCarousel.svelte";
+  import moment from "moment";
   export let data = {
-    id: 192,
-    tag_name: '轴问箱',
-    images: '',
-    content: 'Sample',
-    created_at: '2019-11-25 13:02',
-    likes: 60,
-    is_hide: false,
-    is_rainbow: false,
-    is_archived: false
-  }
-  let liked = false
-  let hasImage = data.images != ''
+    id: 1,
+    created_at: "2022-08-08T02:43:52.064917+08:00",
+    updated_at: "2022-08-08T02:44:58.217927+08:00",
+    tag_id: 1,
+    tag: {
+      id: 1,
+      created_at: "2022-08-08T02:11:39.740543+08:00",
+      updated_at: "2022-08-08T02:11:39.740543+08:00",
+      tag_name: "提问箱",
+      description: "默认话题",
+    },
+    content: "test content",
+    images_num: 0,
+    images: "",
+    likes: 1,
+    is_hide: true,
+    is_rainbow: true,
+    is_archive: false,
+    is_publish: false,
+  };
+  let liked = false;
+  let hasImage = data.images != "";
   function like() {
-    fetch('/api/like?id=' + data.id, {
-      method: 'GET'
-    }).then((res) => {})
+    fetch(`/api/question/${data.id}/like`, {
+      method: "PUT",
+    }).then((res) => {});
   }
-  let imagePreview = false
+  let imagePreview = false;
 </script>
 
 <div class="card__wrap" class:hasImage>
@@ -38,16 +48,16 @@
         <div class="card__footer__id">#{data.id}</div>
         <div
           class="card__footer__tag"
-          on:click={() => router.goto('/tags?tag=' + data.tag_id)}
+          on:click={() => router.goto("/tags?tag=" + data.tag_id)}
         >
-          #{data.tag_name}
+          #{data.tag.tag_name}
         </div>
         <div
           class="card__footer__likes"
           on:click={() => {
-            liked = !liked
-            liked ? data.likes++ : data.likes--
-            like()
+            liked = !liked;
+            liked ? data.likes++ : data.likes--;
+            like();
           }}
         >
           <LikeIcon {liked} />
@@ -55,9 +65,9 @@
         </div>
       </div>
       <div class="card__footer__time">
-        {moment(data.created_at).format('YYYY/MM/DD HH:mm')}{data.is_archived
-          ? ' | 已归档'
-          : ''}
+        {moment(data.created_at).format("YYYY/MM/DD HH:mm")}{data.is_archive
+          ? " | 已归档"
+          : ""}
       </div>
     </div>
   </div>
@@ -70,12 +80,12 @@
 {#if imagePreview}
   <FullCarousel
     exit={() => {
-      imagePreview = false
+      imagePreview = false;
     }}
-    images={data.images.split(';').map((u) => {
+    images={data.images.split(";").map((u) => {
       return {
-        src:  u
-      }
+        src: u,
+      };
     })}
   />
 {/if}

@@ -1,18 +1,18 @@
 <script>
-  import Navbar from '../components/Navbar.svelte'
-  import TopButton from '../components/TopButton.svelte'
-  let taglist = []
-  getTagDetailList()
+  import Navbar from "../components/Navbar.svelte";
+  import TopButton from "../components/TopButton.svelte";
+  let taglist = [];
+  getTagDetailList();
   function getTagDetailList() {
-    return fetch('/api/tags?detail=true')
+    return fetch("/api/tag")
       .then((res) => res.json())
       .then((res) => {
-        if (res.code === 0) {
+        if (res.code === 200) {
           if (res.data !== null) {
-            taglist = res.data
+            taglist = res.data;
           }
         }
-      })
+      });
   }
 </script>
 
@@ -22,8 +22,11 @@
   <div class="taglist">
     {#each taglist as tag}
       <div class="taglist__item">
-        <a href="/tags?tag={tag.tag_id}">#{tag.tag_name}</a>
-        <span class="taglist__count">投稿数：{tag.question_count}</span>
+        <div class="taglist__item__header">
+          <a href="/tags?tag={tag.tag_id}">#{tag.tag_name}</a>
+          <span class="taglist__count">投稿数：{tag.question_count}</span>
+        </div>
+        <div class="taglist_item_desc">{tag.description}</div>
       </div>
     {/each}
   </div>
@@ -56,11 +59,18 @@
     }
   }
   .taglist__item {
+    border-bottom: 1px solid orange;
+  }
+  .taglist__item__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 10px 20px;
-    border-bottom: 1px solid orange;
+  }
+  .taglist_item_desc {
+    font-size: 14px;
+    color: #ff9900d8;
+    padding: 0px 20px 10px 20px;
   }
   .taglist__item:last-child {
     border-bottom: none;
