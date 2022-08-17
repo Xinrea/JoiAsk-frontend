@@ -253,7 +253,7 @@
           loggedIn = true;
           getConfig();
           getQuestions();
-        } else if (res.code === 200) {
+        } else {
           showModel(res.message);
         }
       });
