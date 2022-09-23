@@ -8,7 +8,7 @@
   let cards = [];
   let page = 1;
   function queryCards({ detail: { loaded, complete } }) {
-    fetch(`/api/question?tag_id=${tag}&page=${page}&size=5`)
+    fetch(`/api/question?tag_id=${tag}&page=${page}&size=5&publish=true`)
       .then((response) => response.json())
       .then((res) => {
         console.log(res);
