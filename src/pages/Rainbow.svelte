@@ -6,7 +6,7 @@
   let cards = [];
   let page = 1;
   function fetchRainbows({ detail: { loaded, complete } }) {
-    fetch(`/api/question?rainbow=true&page=${page}&size=5`)
+    fetch(`/api/question?rainbow=true&page=${page}&size=5&publish=true`)
       .then((res) => res.json())
       .then((res) => {
         cards = cards.concat(res.data.questions);
