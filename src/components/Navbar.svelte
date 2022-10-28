@@ -3,11 +3,10 @@
   import { router } from 'tinro'
   export let current = '提问'
   let navroutes = {
-    提问: '/',
-    话题: '/tags',
-    彩虹屁: '/rainbow'
+    '提问': '/',
+    '话题': '/tags',
+    '彩虹屁': '/rainbow'
   }
-
   function changeCurrent(event) {
     router.goto(navroutes[event.target.innerText])
     current = event.target.innerText
@@ -15,10 +14,12 @@
 </script>
 
 <div class="navbar">
-  <div id="logo" />
+  <div class="h-full items-center">
+  <div id="logo"></div>
   <TitleButton content="提问" {current} on:click={changeCurrent} />
   <TitleButton content="话题" {current} on:click={changeCurrent} />
   <TitleButton content="彩虹屁" {current} on:click={changeCurrent} />
+  </div>
 </div>
 
 <style>
@@ -26,10 +27,7 @@
     display: flex;
   }
   .navbar {
-    height: 56px;
-    padding: 0 10px;
-    align-items: center;
-    background-color: #ff9800;
+    @apply bg-primary h-[56px] px-[10px] items-center justify-between;
     box-shadow: 0 0 10px #00000044;
     z-index: 999;
   }

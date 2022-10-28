@@ -18,7 +18,7 @@
 
 <Navbar current="话题" />
 <TopButton />
-<div class="container">
+<div class="infinite-container">
   <div class="taglist">
     {#each taglist as tag}
       <div class="taglist__item">
@@ -35,7 +35,7 @@
 </div>
 
 <style>
-  .container {
+  .infinite-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -47,13 +47,13 @@
     flex-direction: column;
     flex-wrap: wrap;
     justify-content: space-between;
-    border: 1px solid orange;
+    border: 1px solid theme('colors.primary');
     border-radius: 6px;
     background-color: white;
     transition: all 0.3s ease-in-out;
   }
   .taglist:hover {
-    box-shadow: 0 0 20px #ffb74d;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
   }
   @media (max-width: 620px) {
     .taglist {
@@ -61,7 +61,7 @@
     }
   }
   .taglist__item {
-    border-bottom: 1px solid orange;
+    border-bottom: 1px solid theme('colors.primary');
   }
   .taglist__item__header {
     display: flex;
@@ -70,18 +70,18 @@
     padding: 10px 20px;
   }
   .taglist_item_desc {
+    @apply text-primary/75;
     font-size: 14px;
-    color: #ff9900d8;
     padding: 0px 20px 10px 20px;
   }
   .taglist__item:last-child {
     border-bottom: none;
   }
   .taglist a {
-    color: #ff9800;
+    @apply text-primary;
   }
   .taglist__count {
-    color: #ffa726;
+    @apply text-primary/75;
     font-size: 12px;
     margin-left: 0.5rem;
   }

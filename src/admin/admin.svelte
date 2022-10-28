@@ -1,4 +1,5 @@
 <script>
+  import "carbon-components-svelte/css/white.css";
   import {
     TextArea,
     TextInput,
@@ -33,7 +34,7 @@
   import Edit from "carbon-icons-svelte/lib/Edit.svelte";
   import Add from "carbon-icons-svelte/lib/Add.svelte";
   import TrashCan from "carbon-icons-svelte/lib/TrashCan.svelte";
-  import moment from "moment";
+  import miment from "miment";
   import md5 from "md5";
   let announcement = "";
   let loggedIn = false;
@@ -88,7 +89,7 @@
         value: "desc",
       };
     } else {
-      if (value == "descending") {
+      if (value === "descending") {
         tableSortStatus = {
           key: key,
           value: "desc",
@@ -259,7 +260,7 @@
       });
   }
 
-  // Acount related
+  // Account related
   let users = [];
   let userModel = {
     open: false,
@@ -449,7 +450,7 @@
 
 <div
   id="admin-wrapper"
-  style="background-color: white; min-height: 100%; height: auto;"
+  style="height: 100%;"
 >
   <Header company="JOIASK" platformName="提问箱管理后台">
     <svelte:fragment slot="skip-to-content">
@@ -517,13 +518,6 @@
                       },
                     },
                     {
-                      key: "is_hide",
-                      value: "隐藏",
-                      sort: (a, b) => {
-                        return 1;
-                      },
-                    },
-                    {
                       key: "is_rainbow",
                       value: "彩虹",
                       sort: (a, b) => {
@@ -557,7 +551,6 @@
                     if (
                       [
                         "images_num",
-                        "is_hide",
                         "is_rainbow",
                         "is_archive",
                         "is_publish",
@@ -585,15 +578,12 @@
                   </Toolbar>
                   <svelte:fragment slot="cell" let:row let:cell>
                     {#if cell.key === "created_at"}
-                      <div>{moment(cell.value).format("llll")}</div>
+                      <div>{miment(cell.value).format("YYYY-MM-DD hh:mm:ss")}</div>
                     {:else if cell.key.startsWith("is")}
                       <Checkbox
                         checked={cell.value}
                         on:change={(e) => {
                           switch (cell.key) {
-                            case "is_hide":
-                              questionCache[row.id].is_hide = e.target.checked;
-                              break;
                             case "is_rainbow":
                               questionCache[row.id].is_rainbow =
                                 e.target.checked;
@@ -613,7 +603,7 @@
                         }}
                       />
                     {:else}
-                      <div>{cell.value}</div>
+                      <div style="max-width: 600px">{cell.value}</div>
                     {/if}
                   </svelte:fragment>
                   <svelte:fragment slot="expanded-row" let:row>
@@ -640,7 +630,7 @@
                             </Select>
                             <Button
                               size="small"
-                              on:click={updateQuestion(row.id)}>保存</Button
+                              on:click={()=>updateQuestion(row.id)}>保存</Button
                             >
                           </Row>
                         </FormGroup>
@@ -694,6 +684,16 @@
             </Form>
           </TabContent>
           <TabContent>
+            <Button
+              icon={Add}
+              on:click={() => {
+                addTagModel.tag = {
+                  tag_name: "",
+                  description: "",
+                };
+                addTagModel.open = true;
+              }}>添加话题</Button
+            >
             <FormGroup>
               <DataTable
                 headers={[
@@ -708,7 +708,7 @@
               >
                 <svelte:fragment slot="cell" let:row let:cell>
                   {#if cell.key === "created_at"}
-                    <div>{moment(cell.value).format("llll")}</div>
+                    <div>{miment(cell.value).format("YYYY-MM-DD hh:mm:ss")}</div>
                   {:else if cell.key === "operation"}
                     <div>
                       <Button
@@ -727,7 +727,7 @@
                         iconDescription="删除话题"
                         kind="danger"
                         icon={TrashCan}
-                        on:click={deleteTag(row.id)}
+                        on:click={()=>deleteTag(row.id)}
                       />
                     </div>
                   {:else}
@@ -736,16 +736,7 @@
                 </svelte:fragment>
               </DataTable>
             </FormGroup>
-            <Button
-              icon={Add}
-              on:click={() => {
-                addTagModel.tag = {
-                  tag_name: "",
-                  description: "",
-                };
-                addTagModel.open = true;
-              }}>添加话题</Button
-            >
+
           </TabContent>
           <TabContent>
             <FormGroup>
@@ -761,9 +752,9 @@
               >
                 <svelte:fragment slot="cell" let:row let:cell>
                   {#if cell.key === "created_at"}
-                    <div>{moment(cell.value).format("llll")}</div>
+                    <div>{miment(cell.value).format("YYYY-MM-DD hh:mm:ss")}</div>
                   {:else if cell.key === "updated_at"}
-                    <div>{moment(cell.value).format("llll")}</div>
+                    <div>{miment(cell.value).format("YYYY-MM-DD hh:mm:ss")}</div>
                   {:else if cell.key === "operation"}
                     <div>
                       <Button
@@ -783,7 +774,7 @@
                         iconDescription="删除用户"
                         kind="danger"
                         icon={TrashCan}
-                        on:click={deleteUser(row.id)}
+                        on:click={()=>deleteUser(row.id)}
                       />
                     </div>
                   {:else}

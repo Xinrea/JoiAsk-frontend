@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    'WenQuanYi Micro Hei', sans-serif !important;
+}
+
+body {
+  background-color: theme('colors.background') !important;
+  background-image: url("assets/background.svg");
+  background-attachment: fixed;
+}
+
+div {
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+.info {
+  color: white;
+}
+
+.svelte-images-gallery {
+  justify-content: center;
+}

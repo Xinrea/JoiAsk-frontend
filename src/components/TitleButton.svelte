@@ -23,6 +23,6 @@
     transition: all 0.2s ease-in-out;
   }
   .title-button:hover {
-    background: #ffa726;
+    @apply bg-white/25;
   }
 </style>

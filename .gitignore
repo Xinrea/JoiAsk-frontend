@@ -2,3 +2,4 @@ node_modules
 old
 public/build/*
 **/.DS_Store
+dist

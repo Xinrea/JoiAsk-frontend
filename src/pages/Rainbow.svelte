@@ -1,8 +1,8 @@
 <script>
   import Navbar from "../components/Navbar.svelte";
-  import Card from "../components/Card.svelte";
   import TopButton from "../components/TopButton.svelte";
   import InfiniteLoading from "svelte-infinite-loading";
+  import PostCard from "../components/PostCard.svelte";
   let cards = [];
   let page = 1;
   function fetchRainbows({ detail: { loaded, complete } }) {
@@ -22,10 +22,10 @@
 
 <Navbar current="彩虹屁" />
 <TopButton />
-<div class="container">
+<div class="infinite-container">
   <div class="card_list">
     {#each cards as card}
-      <Card data={card} />
+      <PostCard data={card} />
     {/each}
   </div>
   <InfiniteLoading on:infinite={fetchRainbows}>

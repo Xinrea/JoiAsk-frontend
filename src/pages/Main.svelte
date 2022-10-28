@@ -4,8 +4,9 @@
   import autosize from "autosize";
   import Hashtag from "../components/Hashtag.svelte";
   import TopButton from "../components/TopButton.svelte";
-  import Card from "../components/Card.svelte";
+  import PostCard from "../components/PostCard.svelte";
   import { onMount } from "svelte";
+  import {fade} from 'svelte/transition';
   let askContent = "";
   let items = [{ value: 1, label: "提问箱" }];
 
@@ -13,6 +14,7 @@
   let checkedHide = false;
   let checkedRainbow = false;
   let checkedImage = false;
+  let submitInfo = false;
 
   let announcement = "";
   onMount(() => {
@@ -92,6 +94,7 @@
         data.append("files[]", fs[i].file);
       }
     }
+
     fetch(`/api/question`, {
       method: "POST",
       body: data,
@@ -99,8 +102,14 @@
       .then((res) => res.json())
       .then((res) => {
         if (res.code === 200) {
-          alert("提问已提交成功。提问将会在审核通过后显示。");
-          window.location.reload();
+          submitInfo = true
+          askContent = "";
+          tagValue = null;
+          checkedRainbow = false;
+          checkedImage = false;
+          setTimeout(()=>{
+            submitInfo = false
+          }, 4000)
         } else {
           alert(res.message);
         }
@@ -121,9 +130,9 @@
 
 <Navbar current="提问" />
 <TopButton />
-<div class="container">
+<div class="infinite-container flex flex-col w-full">
   <div class="card_list">
-    <div class="ask">
+    <div class="ask max-w-[600px] w-5/6 relative">
       <div class="tag_select">
         <div class="themed">
           <Select
@@ -142,20 +151,16 @@
       <div class="ask__content" class:rainbow={checkedRainbow}>
         <textarea
           id="content"
-          class="ask__textarea"
+          class="ask__textarea p-4 text-slate-500 min-h-[128px]"
+          maxlength="800"
           bind:value={askContent}
-          class:rainbow={checkedRainbow}
-        />
+          class:rainbow={checkedRainbow}></textarea>
       </div>
       <div class="checks">
         <div class="announcement">
           <pre>{announcement}</pre>
         </div>
         <div class="allchecks">
-          <label>
-            <input type="checkbox" bind:checked={checkedHide} />
-            隐藏
-          </label>
           <label>
             <input type="checkbox" bind:checked={checkedRainbow} />
             彩虹屁
@@ -179,9 +184,14 @@
         />
       {/if}
       <button class="ask__submit" on:click={submitQuestion}>提交</button>
+      {#if submitInfo}
+        <div class="absolute top-0 left-0 right-0 bottom-0 flex bg-orange-50 text-slate-500 text-center items-center justify-center z-10" transition:fade>
+          提问已提交审核，内容将会在审核通过后放出
+        </div>
+      {/if}
     </div>
     {#each cards as card}
-      <Card data={card} />
+      <PostCard data={card} />
     {/each}
   </div>
   <InfiniteLoading on:infinite={fetchCards}>
@@ -209,91 +219,71 @@
   .rainbow textarea {
     background: linear-gradient(
       130deg,
-      #dc5de783 0%,
-      #7fefbd8e 33%,
-      #fff5898c 66%,
-      #ec0b4398 100%
+      rgba(220, 93, 231, 0.33) 0%,
+      rgba(127, 239, 189, 0.33) 33%,
+      rgba(255, 245, 137, 0.33) 66%,
+      rgba(236, 11, 67, 0.33) 100%
     );
   }
   .tag_select {
-    color: #ff9800;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 10px;
+    @apply flex flex-col mb-[10px] text-primary;
   }
   .themed {
-    margin-bottom: 10px;
-    display: block;
-    width: 140px;
+    @apply block w-[140px] mb-[10px] text-primary;
     font-size: 12px;
-    color: #ff9800;
     --height: 30px;
     --inputFontSize: 12px;
     --itemFontSize: 12px;
-    --background: rgba(255, 166, 0, 0.116);
+    --background: theme("colors.primary / 10%");
     --borderRadius: 30px;
     --selectedItemPadding: 0 10px 0 8px;
     --inputPadding: 0 0 0 40px;
-    --clearSelectColor: rgba(255, 166, 0, 0.603);
-    --clearSelectFocusColor: orange;
-    --clearSelectHoverColor: orange;
+    --clearSelectColor: theme("colors.primary / 10%");
+    --clearSelectFocusColor: theme("colors.primary");
+    --clearSelectHoverColor: theme("colors.primary");
     --clearSelectTop: 5px;
     --clearSelectBottom: 5px;
     --clearSelectWidth: 20px;
-    --inputColor: orange;
-    --itemColor: orange;
-    --itemActiveBackground: orange;
-    --itemIsActiveBG: orange;
+    --inputColor: theme("colors.primary");
+    --itemColor: theme("colors.primary");
+    --itemActiveBackground: theme("colors.primary");
+    --itemIsActiveBG: theme("colors.primary");
     --itemIsActiveColor: rgb(255, 255, 255);
-    --itemHoverBG: rgba(255, 166, 0, 0.178);
-    --placeholderColor: orange;
-    --indicatorColor: orange;
+    --itemHoverBG: theme("colors.primary / 10%");
+    --placeholderColor: theme("colors.primary");
+    --indicatorColor: theme("colors.primary");
     --border: none;
     z-index: 9;
   }
 
-  .container {
-    padding: 20px 0;
-    display: block;
-  }
   .ask {
     position: relative;
     margin: 30px 0;
     padding: 20px;
-    width: 600px;
     flex-direction: column;
     border: 1px solid rgba(0, 0, 0, 0.125);
     border-radius: 6px;
     background-color: white;
     transition: all 0.4s ease-in-out;
   }
-  @media (max-width: 740px) {
-    .ask {
-      width: 90%;
-    }
-  }
+
   .ask__content {
     position: relative;
   }
   .ask__textarea {
     position: relative;
-    font-family: Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
-      "WenQuanYi Micro Hei", sans-serif;
-    font-size: medium;
+    font-family: 宋体, Fangsong, STFangsong, sans-serif;
     resize: none;
     word-break: break-word;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    background-color: #fdf7eb;
+    text-align: left;
+    background-color: theme("colors.primary / 10%") ;
     border: none;
     border-radius: 10px;
-    padding: 50px 30px 30px 30px;
     width: 100%;
   }
   .ask__textarea:focus {
     background-color: white;
-    outline: 1px solid orange;
+    outline: 1px solid theme("colors.primary");
   }
   .checks {
     font-size: small;
@@ -302,10 +292,7 @@
     justify-content: space-between;
   }
   .allchecks {
-    color: #ff9800;
-    flex-direction: column;
-    justify-content: start;
-    align-items: flex-start;
+    @apply flex flex-col justify-start items-start text-primary;
   }
   label {
     font-size: small;
@@ -314,6 +301,7 @@
     justify-content: space-between;
     display: flex;
     word-break: keep-all;
+    margin-bottom: 3px;
   }
   input[type="checkbox"] {
     cursor: pointer;
@@ -322,11 +310,11 @@
     appearance: none;
     /* For iOS < 15 to remove gradient background */
     background-color: #fff;
-    border: 2px solid #ffb74d;
+    border: 2px solid theme("colors.primary");
     /* Not removed via appearance */
     margin-right: 5px;
     font: inherit;
-    color: orange;
+    color: theme("colors.primary");
     width: 1.4em;
     height: 1.4em;
     border-radius: 0.15em;
@@ -340,7 +328,7 @@
     height: 0.8em;
     transform: scale(0);
     transition: 120ms transform ease-in-out;
-    box-shadow: inset 1em 1em #ffb74d;
+    box-shadow: inset 1em 1em theme("colors.primary");
   }
 
   input[type="checkbox"]:checked::before {
@@ -348,16 +336,16 @@
   }
 
   button {
+    @apply bg-primary/75;
     cursor: pointer;
     border: 1px solid rgba(128, 128, 128, 0.315);
     border-radius: 5px;
     padding: 5px 0;
     color: white;
     font-size: medium;
-    background-color: #ff9800;
   }
   button:hover {
-    background-color: #ffa726;
+    @apply bg-primary;
   }
   .card_list {
     display: flex;
@@ -367,7 +355,7 @@
   }
 
   pre {
-    color: #ff9800;
+    @apply text-primary;
     font-size: small;
     line-height: normal;
     white-space: pre-wrap;
