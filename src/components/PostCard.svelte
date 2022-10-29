@@ -3,7 +3,6 @@
   import { createEventDispatcher } from "svelte"
   import {fade} from 'svelte/transition'
   import {onMount} from "svelte";
-  const dispatch = createEventDispatcher()
   export let data = {
     id: 1,
     created_at: "2022-08-08T02:43:52.064917+08:00",
@@ -162,10 +161,15 @@
   }
 
   .card-content {
-    @apply flex flex-col my-4 justify-start overflow-y-scroll relative text-left text-slate-500 h-full resize-none bg-transparent text-base;
+    @apply flex flex-col my-4 justify-start overflow-y-auto relative text-left text-slate-500 h-full resize-none bg-transparent text-base;
+    -ms-overflow-style: none;
     white-space: pre-wrap;
     font-family: 宋体, Fangsong, STFangsong, serif ;
     z-index: 3;
+  }
+
+  .card-content::-webkit-scrollbar {
+    display: none; /* Chrome Safari */
   }
 
   .more {
@@ -181,8 +185,8 @@
     top: 20px;
     right: 6px;
     font-family: system-ui;
-    color: theme('colors.primary / 40%');
-    box-shadow: 0 0 0 3px theme('colors.primary / 40%'), 0 0 0 2px theme('colors.primary / 40%') inset;
+    color: theme('colors.primary / 30%');
+    box-shadow: 0 0 0 3px theme('colors.primary / 30%'), 0 0 0 2px theme('colors.primary / 30%') inset;
     border: 2px solid transparent;
     border-radius: 4px;
     display: inline-block;
