@@ -38,7 +38,7 @@
     scrollEnd = cardContentElement.scrollTop + cardContentElement.clientHeight >= cardContentElement.scrollHeight;
   })
   let rainbowParam = 'linear-gradient(\n' +
-    '      130deg,\n' +
+    `      ${Math.random()*360+'deg'},\n` +
     '      rgba(220, 93, 231, 0.3) 0%,\n' +
     '      rgba(127, 239, 189, 0.6) 33%,\n' +
     '      rgba(255, 245, 137, 0.6) 66%,\n' +
@@ -96,8 +96,8 @@
 </script>
 
 <div class="flex flex-row w-full overflow-x-auto overflow-y-visible p-6" class:justify-center={imageList.length === 0}>
-  <div class="relative rotatable rounded-md overflow-hidden" on:mousemove={handleCardMouseMove} bind:this={card}>
-  <div class="card" style="--rainbow:{rainbowParam}; --rand-degree: {randDegree()}" class:special={data.is_rainbow}>
+  <div class="card-wrap relative rotatable rounded-md overflow-hidden w-5/6 min-h-[300px] min-w-[283px] md:h-[346px] md:w-[600px]" on:mousemove={handleCardMouseMove} bind:this={card}>
+  <div class="card h-full w-full" style="--rainbow:{rainbowParam}; --rand-degree: {randDegree()}" class:special={data.is_rainbow}>
     <div class="watermark cursor-pointer" on:click={() => router.goto("/tags?tag=" + data.tag_id + "&tag_name=" + data.tag.tag_name)}>#{data.tag.tag_name}</div>
     <div class="card-header">{postTime()}</div>
     <div class="card-content" class:more={!scrollEnd} bind:this={cardContentElement} on:scroll={handleScroll}>
@@ -116,7 +116,7 @@
         {/if}
       {data.content}
       {#if data.is_archive}
-      <div class="watermark archived" style="--watermark-color: red; transform: rotate(10deg) scale(1.2); top: 70%; left: 20%;">已归档</div>
+      <div class="watermark archived pointer-events-none" style="--watermark-color: red; transform: rotate(10deg) scale(1.2); top: 70%; left: 20%;">已归档</div>
       {/if}
       </div>
     </div>
@@ -146,12 +146,12 @@
 
 <style>
   .card {
-    @apply bg-card shadow-lg w-5/6 min-h-[300px] min-w-[283px] p-4 text-slate-400 flex flex-col justify-between;
+    @apply bg-card shadow-lg p-4 text-slate-400 flex flex-col justify-between;
     content-visibility: auto;
   }
 
   @media (min-width: 720px) {
-    .card {
+    .card-wrap {
       height: 346px;
       width: 600px;
     }
