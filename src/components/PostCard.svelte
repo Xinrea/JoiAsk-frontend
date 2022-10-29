@@ -1,6 +1,5 @@
 <script>
   import {router} from "tinro";
-  import { createEventDispatcher } from "svelte"
   import {fade} from 'svelte/transition'
   import {onMount} from "svelte";
   export let data = {
@@ -40,10 +39,10 @@
   })
   let rainbowParam = 'linear-gradient(\n' +
     '      130deg,\n' +
-    '      rgba(220, 93, 231, 0.2) 0%,\n' +
-    '      rgba(127, 239, 189, 0.2) 33%,\n' +
-    '      rgba(255, 245, 137, 0.2) 66%,\n' +
-    '      rgba(236, 11, 67, 0.2) 100%\n' +
+    '      rgba(220, 93, 231, 0.3) 0%,\n' +
+    '      rgba(127, 239, 189, 0.6) 33%,\n' +
+    '      rgba(255, 245, 137, 0.6) 66%,\n' +
+    '      rgba(236, 11, 67, 0.3) 100%\n' +
     '    )'
   function postTime() {
     let postTimestamp = new Date(data.created_at)/1000
@@ -78,7 +77,7 @@
     let dx = x - w/2
     let dy = y - h/2
     let d = Math.atan(dy/dx) * 180 / Math.PI + Math.sqrt(dx*dx + dy*dy)/Math.sqrt(w*w + h*h) * 180
-    rainbowParam = `linear-gradient(${d}deg, rgba(220, 93, 231, 0.2) 0%, rgba(127, 239, 189, 0.2) 33%, rgba(255, 245, 137, 0.2) 66%, rgba(236, 11, 67, 0.2) 100%)`
+    rainbowParam = `linear-gradient(${d}deg, rgba(220, 93, 231, 0.3) 0%, rgba(127, 239, 189, 0.6) 33%, rgba(255, 245, 137, 0.6) 66%, rgba(236, 11, 67, 0.3) 100%)`
   }
 
   let handleCardMouseMove = (e) => {
@@ -97,7 +96,8 @@
 </script>
 
 <div class="flex flex-row w-full overflow-x-auto overflow-y-visible p-6" class:justify-center={imageList.length === 0}>
-  <div class="card rotatable" style="--rainbow:{rainbowParam}; --rand-degree: {randDegree()}" class:special={data.is_rainbow} on:mousemove={handleCardMouseMove} bind:this={card}>
+  <div class="relative rotatable rounded-md overflow-hidden" on:mousemove={handleCardMouseMove} bind:this={card}>
+  <div class="card" style="--rainbow:{rainbowParam}; --rand-degree: {randDegree()}" class:special={data.is_rainbow}>
     <div class="watermark cursor-pointer" on:click={() => router.goto("/tags?tag=" + data.tag_id + "&tag_name=" + data.tag.tag_name)}>#{data.tag.tag_name}</div>
     <div class="card-header">{postTime()}</div>
     <div class="card-content" class:more={!scrollEnd} bind:this={cardContentElement} on:scroll={handleScroll}>
@@ -127,6 +127,11 @@
   }}
     >👍{data.likes}</span></div>
   </div>
+    {#if data.is_rainbow}
+    <div class="texture-illusion"></div>
+    <div class="texture-noise"></div>
+    {/if}
+  </div>
   <div class="flex flex-row flex-nowrap overflow-y-visible">
   {#each imageList as image}
     <div class="min-w-[200px]  ml-3 last:mx-3">
@@ -141,7 +146,7 @@
 
 <style>
   .card {
-    @apply bg-card rounded-md shadow-lg w-5/6 min-h-[300px] min-w-[283px] p-4 text-slate-400 flex flex-col justify-between;
+    @apply bg-card shadow-lg w-5/6 min-h-[300px] min-w-[283px] p-4 text-slate-400 flex flex-col justify-between;
     content-visibility: auto;
   }
 
@@ -256,5 +261,20 @@
     @apply bg-white w-full h-full text-slate-400 flex flex-col justify-between;
     background-image: url('../assets/image_stamp.png');
     background-size: cover;
+  }
+
+  .texture-noise {
+    @apply absolute w-full h-full top-0 left-0 pointer-events-none;
+    background-image: url('../assets/texture.svg');
+    mix-blend-mode: color-dodge;
+  }
+
+  .texture-illusion {
+    @apply absolute w-full h-full top-0 left-0 pointer-events-none;
+    background-image: url('../assets/illusion.webp');
+    background-blend-mode: exclusion, hue, hard-light;
+    background-size: 50%;
+    mix-blend-mode: screen;
+    opacity: 0.1;
   }
 </style>
