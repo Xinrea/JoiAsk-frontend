@@ -23,27 +23,16 @@
     is_archive: false,
     is_publish: false,
   };
-  const maxDegree = 20
+  const maxDegree = 30
   let liked = false
   let cardContentElement
   let card
   let imageList = []
   let scrollEnd = false
-  let randDegree = () =>{
-    let r = Math.random()*maxDegree - maxDegree/2
-    return r+'deg'
-  }
   onMount(()=>{
-    card.style.transform = `perspective(1500px) rotateX(${randDegree()}) rotateY(${randDegree()})`;
     scrollEnd = cardContentElement.scrollTop + cardContentElement.clientHeight >= cardContentElement.scrollHeight;
   })
-  let rainbowParam = 'linear-gradient(\n' +
-    `      ${Math.random()*360+'deg'},\n` +
-    '      rgba(220, 93, 231, 0.3) 0%,\n' +
-    '      rgba(127, 239, 189, 0.6) 33%,\n' +
-    '      rgba(255, 245, 137, 0.6) 66%,\n' +
-    '      rgba(236, 11, 67, 0.3) 100%\n' +
-    '    )'
+
   function postTime() {
     let postTimestamp = new Date(data.created_at)/1000
     let unit = '秒'
@@ -63,21 +52,30 @@
     return time + unit + ' 前'
   }
 
+  let x = 0
+  let y = 0
+  let rx = 0
+  let ry = 0
+  let px = '50%'
+  let py = '50%'
+  let d = 0
+  let hyp = 0.03
   let mouseMoveToTransform = (e) => {
     let rect = e.currentTarget.getBoundingClientRect();
-    let x = e.clientX - rect.left; //x position within the element.
-    let y = e.clientY - rect.top;  //y position within the element.
+    x = e.clientX - rect.left; //x position within the element.
+    y = e.clientY - rect.top;  //y position within the element.
     let w = rect.width
     let h = rect.height
-    let xPercent = (x / w) * maxDegree - maxDegree/2;
-    let yPercent = (y / h) * maxDegree - maxDegree/2;
-    e.currentTarget.style.transform = `perspective(1500px) rotateX(${yPercent}deg) rotateY(${-xPercent}deg)`;
+    px = (x / w)*100 + '%'
+    py = (y / h)*100 + '%'
+    rx = -((x / w) * maxDegree - maxDegree/2) + 'deg'
+    ry = (y / h) * maxDegree - maxDegree/2 + 'deg';
+    hyp = Math.sqrt(Math.pow(x - w / 2, 2) + Math.pow(y - h / 2, 2)) / Math.sqrt(Math.pow(w / 2, 2) + Math.pow(h / 2, 2))
 
     // Calculate param for rainbow effect
     let dx = x - w/2
     let dy = y - h/2
-    let d = Math.atan(dy/dx) * 180 / Math.PI + Math.sqrt(dx*dx + dy*dy)/Math.sqrt(w*w + h*h) * 180
-    rainbowParam = `linear-gradient(${d}deg, rgba(220, 93, 231, 0.3) 0%, rgba(127, 239, 189, 0.6) 33%, rgba(255, 245, 137, 0.6) 66%, rgba(236, 11, 67, 0.3) 100%)`
+    d = (Math.atan(dy/dx) * 180 / Math.PI + Math.sqrt(dx*dx + dy*dy)/Math.sqrt(w*w + h*h) * 180)+'deg'
   }
 
   let handleCardMouseMove = (e) => {
@@ -96,8 +94,8 @@
 </script>
 
 <div class="flex flex-row w-full overflow-x-auto overflow-y-visible p-6" class:justify-center={imageList.length === 0}>
-  <div class="card-wrap relative rotatable rounded-md overflow-hidden w-5/6 min-h-[300px] min-w-[283px] md:h-[346px] md:w-[600px]" on:mousemove={handleCardMouseMove} bind:this={card}>
-  <div class="card h-full w-full" style="--rainbow:{rainbowParam}; --rand-degree: {randDegree()}" class:special={data.is_rainbow}>
+  <div class="card-wrap relative rotatable rounded-md overflow-hidden w-5/6 min-h-[300px] min-w-[283px] md:h-[346px] md:w-[600px]" style="--x: {x}; --y: {y}; --rx: {rx}; --ry: {ry}; --d: {d}; --hyp: {hyp}; --px:{px}; --py:{py}" on:mousemove={handleCardMouseMove} bind:this={card}>
+  <div class="card h-full w-full" class:special={data.is_rainbow}>
     <div class="watermark cursor-pointer" on:click={() => router.goto("/tags?tag=" + data.tag_id + "&tag_name=" + data.tag.tag_name)}>#{data.tag.tag_name}</div>
     <div class="card-header">{postTime()}</div>
     <div class="card-content" class:more={!scrollEnd} bind:this={cardContentElement} on:scroll={handleScroll}>
@@ -182,6 +180,8 @@
   }
 
   .rotatable {
+    transform-origin: center;
+    transform: perspective(1500px) rotateX(var(--ry)) rotateY(var(--rx));
     transform-style: preserve-3d;
   }
 
@@ -208,11 +208,6 @@
   .archived {
     color: rgba(255, 0, 0, 0.51);
     box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.4), 0 0 0 2px rgba(255, 0, 0, 0.4) inset;
-  }
-
-  /* special card with rainbow color background*/
-  .special {
-    background-image: var(--rainbow);
   }
 
   .stamp {
@@ -263,18 +258,49 @@
     background-size: cover;
   }
 
+  .special {
+    background-image: linear-gradient(133deg, rgba(220, 93, 231, 0.3) 0%, rgba(127, 239, 189, 0.3) 33%, rgba(255, 245, 137, 0.3) 66%, rgba(236, 11, 67, 0.3) 100%);
+  }
+
   .texture-noise {
     @apply absolute w-full h-full top-0 left-0 pointer-events-none;
     background-image: url('../assets/texture.svg');
     mix-blend-mode: color-dodge;
+    opacity: 0.3;
   }
 
   .texture-illusion {
     @apply absolute w-full h-full top-0 left-0 pointer-events-none;
-    background-image: url('../assets/illusion.webp');
+    background-image: url("../assets/illusion.webp"), repeating-linear-gradient( 0deg,
+    rgb(255, 119, 115) 5%,
+    rgba(255,237,95,1) 10%,
+    rgba(168,255,95,1) 15%,
+    rgba(131,255,247,1) 20%,
+    rgba(120,148,255,1) 25%,
+    rgb(216, 117, 255) 30%,
+    rgb(255, 119, 115) 35%
+    ),
+    repeating-linear-gradient(
+      133deg,
+      #0e152e 0%,
+      hsl(180, 10%, 60%) 7.6%,
+      hsl(180, 29%, 66%) 9%,
+      hsl(180, 10%, 60%) 10.4%,
+      #0e152e 20% ,
+      #0e152e 24%
+    ),
+    radial-gradient(
+      farthest-corner circle
+      at var(--px) var(--py),
+      rgba(0, 0, 0, .1) 12%,
+      rgba(0, 0, 0, .15) 20%,
+      rgba(0, 0, 0, .25) 120%
+    );
+    background-position: center, 0% var(--py), var(--px) var(--py), var(--px) var(--py);
+    filter: brightness(calc((var(--hyp)*0.3) + 0.3)) contrast(2) saturate(1.5);
     background-blend-mode: exclusion, hue, hard-light;
     background-size: 50%;
-    mix-blend-mode: screen;
-    opacity: 0.1;
+    mix-blend-mode: color-dodge;
+    opacity: 0.3;
   }
 </style>
