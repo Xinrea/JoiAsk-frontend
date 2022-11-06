@@ -8,7 +8,7 @@
   import { onMount } from "svelte";
   import {fade} from 'svelte/transition';
   let askContent = "";
-  let items = [{ value: 1, label: "提问箱" }];
+  let items = [];
 
   let tagValue;
   let checkedHide = false;
@@ -24,7 +24,7 @@
   });
 
   // FilePond
-  import FilePond, { registerPlugin, supported } from "svelte-filepond";
+  import FilePond, { registerPlugin } from "svelte-filepond";
   import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
   import FilePondPluginImagePreview from "filepond-plugin-image-preview";
   import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
