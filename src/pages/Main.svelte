@@ -126,6 +126,12 @@
         }
       });
   }
+  // Image preview
+  function handleImagePreview(event) {
+    console.log("image triggered")
+    const url = event.detail.url
+    console.log(url)
+  }
 </script>
 
 <Navbar current="提问" />
@@ -191,7 +197,7 @@
       {/if}
     </div>
     {#each cards as card}
-      <PostCard data={card} />
+      <PostCard data={card} on:message={handleImagePreview} />
     {/each}
   </div>
   <InfiniteLoading on:infinite={fetchCards}>

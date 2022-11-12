@@ -26,13 +26,14 @@
   const maxDegree = 30
   let liked = false
   let cardContentElement
-  let card
   let imageList = []
   let scrollEnd = false
   onMount(()=>{
     scrollEnd = cardContentElement.scrollTop + cardContentElement.clientHeight >= cardContentElement.scrollHeight;
   })
-
+  function imagePreview(url) {
+    window.callPreview(url)
+  }
   function postTime() {
     let postTimestamp = new Date(data.created_at)/1000
     let unit = '秒'
@@ -94,7 +95,7 @@
 </script>
 
 <div class="flex flex-row w-full overflow-x-auto overflow-y-visible p-6" class:justify-center={imageList.length === 0}>
-  <div class="card-wrap relative rotatable rounded-md overflow-hidden w-5/6 min-h-[300px] min-w-[283px] md:h-[346px] md:w-[600px]" style="--x: {x}; --y: {y}; --rx: {rx}; --ry: {ry}; --d: {d}; --hyp: {hyp}; --px:{px}; --py:{py}" on:mousemove={handleCardMouseMove} bind:this={card}>
+  <div class="card-wrap relative rotatable rounded-md overflow-hidden w-5/6 min-h-[300px] min-w-[283px] md:h-[346px] md:w-[600px]" style="--x: {x}; --y: {y}; --rx: {rx}; --ry: {ry}; --d: {d}; --hyp: {hyp}; --px:{px}; --py:{py}" on:mousemove={handleCardMouseMove}>
   <div class="card h-full w-full" class:special={data.is_rainbow}>
     <div class="watermark cursor-pointer" on:click={() => router.goto("/tags?tag=" + data.tag_id + "&tag_name=" + data.tag.tag_name)}>#{data.tag.tag_name}</div>
     <div class="card-header">{postTime()}</div>
@@ -133,9 +134,8 @@
   <div class="flex flex-row flex-nowrap overflow-y-visible">
   {#each imageList as image}
     <div class="min-w-[200px]  ml-3 last:mx-3">
-      <img src={image} class="rounded-md shadow-lg max-h-[346px] cursor-pointer" transition:fade on:mousemove={handleCardMouseMove} alt="" on:click={()=>{
-        // Open in new tab
-        window.open('/image?url=' + image, '_blank')
+      <img src={image} class="rounded-md shadow-lg max-h-[346px] cursor-pointer" transition:fade alt="" on:click={()=>{
+        imagePreview(image)
       }}/>
     </div>
   {/each}
@@ -215,7 +215,6 @@
     width: 80px;
     height: 80px;
     cursor: pointer;
-    display: inline-block;
     padding: 10px;
     background: white;
     text-align:center;
@@ -271,7 +270,7 @@
 
   .texture-illusion {
     @apply absolute w-full h-full top-0 left-0 pointer-events-none;
-    background-image: url("../assets/illusion.webp"), repeating-linear-gradient( 0deg,
+    background-image: url("../assets/vmaxbg.jpg"), repeating-linear-gradient( 0deg,
     rgb(255, 119, 115) 5%,
     rgba(255,237,95,1) 10%,
     rgba(168,255,95,1) 15%,
@@ -301,6 +300,6 @@
     background-blend-mode: exclusion, hue, hard-light;
     background-size: 50%;
     mix-blend-mode: color-dodge;
-    opacity: 0.3;
+    opacity: 0.5;
   }
 </style>
