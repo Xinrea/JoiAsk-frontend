@@ -167,7 +167,7 @@
     @apply flex flex-col my-4 justify-start overflow-y-auto relative text-left text-slate-500 h-full resize-none bg-transparent text-base;
     -ms-overflow-style: none;
     white-space: pre-wrap;
-    font-family: 宋体, Fangsong, STFangsong, serif ;
+    font-family: system-ui, Fangsong, STFangsong, serif ;
     z-index: 3;
   }
 
