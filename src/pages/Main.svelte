@@ -6,7 +6,7 @@
   import TopButton from "../components/TopButton.svelte";
   import PostCard from "../components/PostCard.svelte";
   import { onMount } from "svelte";
-  import {fade} from 'svelte/transition';
+  import { fade } from "svelte/transition";
   let askContent = "";
   let items = [];
 
@@ -102,14 +102,14 @@
       .then((res) => res.json())
       .then((res) => {
         if (res.code === 200) {
-          submitInfo = true
+          submitInfo = true;
           askContent = "";
           tagValue = null;
           checkedRainbow = false;
           checkedImage = false;
-          setTimeout(()=>{
-            submitInfo = false
-          }, 4000)
+          setTimeout(() => {
+            submitInfo = false;
+          }, 4000);
         } else {
           alert(res.message);
         }
@@ -128,9 +128,9 @@
   }
   // Image preview
   function handleImagePreview(event) {
-    console.log("image triggered")
-    const url = event.detail.url
-    console.log(url)
+    console.log("image triggered");
+    const url = event.detail.url;
+    console.log(url);
   }
 </script>
 
@@ -160,7 +160,8 @@
           class="ask__textarea p-4 text-slate-500 min-h-[128px]"
           maxlength="800"
           bind:value={askContent}
-          class:rainbow={checkedRainbow}></textarea>
+          class:rainbow={checkedRainbow}
+        />
       </div>
       <div class="checks">
         <div class="announcement">
@@ -191,7 +192,10 @@
       {/if}
       <button class="ask__submit" on:click={submitQuestion}>提交</button>
       {#if submitInfo}
-        <div class="absolute top-0 left-0 right-0 bottom-0 flex bg-orange-50 text-slate-500 text-center items-center justify-center z-10" transition:fade>
+        <div
+          class="absolute top-0 left-0 right-0 bottom-0 flex bg-orange-50 text-slate-500 text-center items-center justify-center z-10"
+          transition:fade
+        >
           提问已提交审核，内容将会在审核通过后放出
         </div>
       {/if}
@@ -282,7 +286,7 @@
     resize: none;
     word-break: break-word;
     text-align: left;
-    background-color: theme("colors.primary / 10%") ;
+    background-color: theme("colors.primary / 10%");
     border: none;
     border-radius: 10px;
     width: 100%;
