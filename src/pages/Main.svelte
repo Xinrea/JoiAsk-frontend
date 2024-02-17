@@ -15,6 +15,7 @@
   let checkedRainbow = false;
   let checkedImage = false;
   let submitInfo = false;
+  let isUploading = false;
 
   let announcement = "";
   onMount(() => {
@@ -95,6 +96,7 @@
       }
     }
 
+    isUploading = true;
     fetch(`/api/question`, {
       method: "POST",
       body: data,
@@ -113,6 +115,7 @@
         } else {
           alert(res.message);
         }
+        isUploading = false;
       });
   }
   function getConfig() {
@@ -190,7 +193,15 @@
           maxFileSize={1048576}
         />
       {/if}
-      <button class="ask__submit" on:click={submitQuestion}>提交</button>
+      {#if isUploading}
+        <button class="ask__submit disabled">
+          上传中，请稍等
+        </button>
+      {:else}
+        <button class="ask__submit" on:click={submitQuestion}>
+          提交
+        </button>
+      {/if}
       {#if submitInfo}
         <div
           class="absolute top-0 left-0 right-0 bottom-0 flex bg-orange-50 text-slate-500 text-center items-center justify-center z-10"
@@ -356,6 +367,11 @@
   }
   button:hover {
     @apply bg-primary;
+  }
+
+  button:disabled {
+    @apply bg-primary/50;
+    cursor: not-allowed;
   }
   .card_list {
     display: flex;
