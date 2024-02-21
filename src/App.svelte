@@ -13,14 +13,32 @@
   window.callPreview = (url) => {
     previewURL = url
   };
+  let loggedIn = false;
+  function auth() {
+    fetch("/api/info", {
+      credentials: "include",
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        if (res.code === 200) {
+          loggedIn = true;
+        } else {
+          loggedIn = false;
+        }
+      });
+  }
+  auth();
 </script>
 
-<Route path="/"><Main /></Route>
+<Route path="/"><Main loggedIn={loggedIn} /></Route>
 <Route path="/tags" let:meta>
   {#if meta.query["tag"]}
     <Tagdetail
       tag={decodeURI(meta.query["tag"])}
       tag_name={decodeURI(meta.query["tag_name"])}
+      loggedIn={loggedIn}
     />
   {:else}
     <Tags />

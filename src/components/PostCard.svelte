@@ -23,6 +23,7 @@
     is_archive: false,
     is_publish: false,
   };
+  export let login = false;
   const maxDegree = 30;
   let liked = false;
   let cardContentElement;
@@ -142,6 +143,28 @@
     });
   };
 
+  let archive = () => {
+    let body = JSON.stringify({
+      tag_id: data.tag_id,
+      is_hide: data.is_hide,
+      is_rainbow: data.is_rainbow,
+      is_archive: true,
+      is_publish: data.is_publish,
+    });
+    fetch(`/api/question/${data.id}`, {
+      credentials: "include",
+      method: "PUT",
+      body: body,
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.code !== 200) {
+          alert(res.message);
+        } else {
+          data.is_archive = true;
+        }
+      });
+  };
   function handleScroll(e) {
     scrollEnd =
       e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight;
@@ -212,6 +235,12 @@
             like();
           }}>👍{data.likes}</span
         >
+        {#if login && !data.is_archive}
+          <span
+          class="cursor-pointer"
+          style="border: 1px dotted gray; border-radius: 3px;"
+          on:click={archive}>归档此卡</span>
+        {/if}
       </div>
     </div>
     {#if data.is_rainbow}

@@ -16,6 +16,7 @@
   let checkedImage = false;
   let submitInfo = false;
   let isUploading = false;
+  export let loggedIn = false;
 
   let announcement = "";
   onMount(() => {
@@ -212,7 +213,7 @@
       {/if}
     </div>
     {#each cards as card}
-      <PostCard data={card} on:message={handleImagePreview} />
+      <PostCard data={card} login={loggedIn} on:message={handleImagePreview} />
     {/each}
   </div>
   <InfiniteLoading on:infinite={fetchCards}>

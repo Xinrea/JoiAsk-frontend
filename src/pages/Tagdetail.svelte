@@ -5,6 +5,7 @@
   import PostCard from "../components/PostCard.svelte";
   export let tag = 1;
   export let tag_name = "";
+  export let loggedIn = false;
   let cards = [];
   let page = 1;
   function queryCards({ detail: { loaded, complete } }) {
@@ -36,7 +37,7 @@
       #{tag_name}
     </div>
     {#each cards as card}
-      <PostCard data={card} />
+      <PostCard data={card} login={loggedIn} />
     {/each}
   </div>
   <InfiniteLoading on:infinite={queryCards}>
