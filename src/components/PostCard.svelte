@@ -2,6 +2,7 @@
   import { router } from "tinro";
   import { fade } from "svelte/transition";
   import { onMount } from "svelte";
+  import EmojiPicker from "./EmojiPicker.svelte"
   export let data = {
     id: 1,
     created_at: "2022-08-08T02:43:52.064917+08:00",
@@ -17,15 +18,16 @@
     content: "test content",
     images_num: 0,
     images: "",
-    likes: 1,
     is_hide: true,
     is_rainbow: true,
     is_archive: false,
     is_publish: false,
+    emojis: [
+      { value: "😀", count: 3 }
+    ],
   };
   export let login = false;
   const maxDegree = 30;
-  let liked = false;
   let cardContentElement;
   let imageList = [];
   let scrollEnd = false;
@@ -137,12 +139,6 @@
     mouseMoveToTransform(e);
   };
 
-  let like = () => {
-    fetch(`/api/question/${data.id}/like`, {
-      method: "PUT",
-    });
-  };
-
   let archive = () => {
     let body = JSON.stringify({
       tag_id: data.tag_id,
@@ -192,7 +188,7 @@
       >
         #{data.tag.tag_name}
       </div>
-      <div class="card-header">{postTime()}</div>
+      <div class="card-header">#{data.id} | {postTime()}</div>
       <div
         class="card-content"
         class:more={!scrollEnd}
@@ -226,19 +222,11 @@
         </div>
       </div>
       <div class="card-footer">
-        #{data.id}
-        <span
-          class="cursor-pointer"
-          on:click={() => {
-            liked = !liked;
-            liked ? data.likes++ : data.likes--;
-            like();
-          }}>👍{data.likes}</span
-        >
+        <EmojiPicker data={data.emojis == "" ? [] : JSON.parse(data.emojis)} questionID={data.id}/>
         {#if login && !data.is_archive}
           <span
           class="cursor-pointer"
-          style="border: 1px dotted gray; border-radius: 3px;"
+          style="border: 1px dotted gray; border-radius: 3px; padding: 0.1rem;"
           on:click={archive}>归档此卡</span>
         {/if}
       </div>
@@ -283,7 +271,7 @@
   }
 
   .card-footer {
-    @apply text-right text-sm h-6;
+    @apply text-right text-sm h-6 flex justify-end items-center;
   }
 
   .card-content {
