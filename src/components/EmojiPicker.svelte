@@ -11,7 +11,7 @@
     { id: 8, value: "😠"},
     { id: 9, value: "💩"},
     { id: 10, value: "💖"},
-    { id: 11, value: "🥲"},
+    { id: 11, value: "🐵"},
   ];
   export let questionID;
   export let data = [];
