@@ -57,6 +57,7 @@
     }
     return time + unit + " 前";
   }
+  let emojis = data.emojis == "" ? [] : JSON.parse(data.emojis);
 
   let x = 0;
   let y = 0;
@@ -222,7 +223,7 @@
         </div>
       </div>
       <div class="card-footer">
-        <EmojiPicker data={data.emojis == "" ? [] : JSON.parse(data.emojis)} questionID={data.id}/>
+        <EmojiPicker data={emojis} questionID={data.id}/>
         {#if login && !data.is_archive}
           <span
           class="cursor-pointer"
