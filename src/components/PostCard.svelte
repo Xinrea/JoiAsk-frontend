@@ -2,7 +2,7 @@
   import { router } from "tinro";
   import { fade } from "svelte/transition";
   import { onMount } from "svelte";
-  import EmojiPicker from "./EmojiPicker.svelte"
+  import EmojiPicker from "./EmojiPicker.svelte";
   export let data = {
     id: 1,
     created_at: "2022-08-08T02:43:52.064917+08:00",
@@ -22,9 +22,7 @@
     is_rainbow: true,
     is_archive: false,
     is_publish: false,
-    emojis: [
-      { value: "😀", count: 3 }
-    ],
+    emojis: [{ value: "😀", count: 3 }],
   };
   export let login = false;
   const maxDegree = 30;
@@ -223,12 +221,15 @@
         </div>
       </div>
       <div class="card-footer">
-        <EmojiPicker data={emojis} questionID={data.id}/>
+        <EmojiPicker data={emojis} questionID={data.id} />
         {#if login && !data.is_archive}
-          <span
-          class="cursor-pointer"
-          style="border: 1px dotted gray; border-radius: 3px; padding: 0.1rem;"
-          on:click={archive}>归档此卡</span>
+          <div
+            class="cursor-pointer inline-block select-none"
+            style="border: 1px dotted gray; border-radius: 3px; padding: 0.1rem;"
+            on:click={archive}
+          >
+            归档此卡
+          </div>
         {/if}
       </div>
     </div>
@@ -239,7 +240,7 @@
   </div>
   <div class="flex flex-row flex-nowrap overflow-y-visible">
     {#each imageList as image}
-      <div class="min-w-[200px]  ml-3 last:mx-3">
+      <div class="min-w-[200px] ml-3 last:mx-3">
         <img
           src={image}
           class="rounded-md shadow-lg max-h-[346px] cursor-pointer"
@@ -303,7 +304,8 @@
     right: 6px;
     font-family: system-ui;
     color: theme("colors.primary / 30%");
-    box-shadow: 0 0 0 3px theme("colors.primary / 30%"),
+    box-shadow:
+      0 0 0 3px theme("colors.primary / 30%"),
       0 0 0 2px theme("colors.primary / 30%") inset;
     border: 2px solid transparent;
     border-radius: 4px;
@@ -320,7 +322,8 @@
 
   .archived {
     color: rgba(255, 0, 0, 0.51);
-    box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.4),
+    box-shadow:
+      0 0 0 3px rgba(255, 0, 0, 0.4),
       0 0 0 2px rgba(255, 0, 0, 0.4) inset;
   }
 
@@ -420,7 +423,10 @@
         rgba(0, 0, 0, 0.15) 20%,
         rgba(0, 0, 0, 0.25) 120%
       );
-    background-position: center, 0% var(--py), var(--px) var(--py),
+    background-position:
+      center,
+      0% var(--py),
+      var(--px) var(--py),
       var(--px) var(--py);
     filter: brightness(calc((var(--hyp) * 0.3) + 0.3)) contrast(2) saturate(1.5);
     background-blend-mode: exclusion, hue, hard-light;
