@@ -446,12 +446,20 @@
         }
       });
   }
+
+  function render(content) {
+    // escape html tags
+    content = content.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    // replace {{content}} as a <span> element, include \n
+    content = content.replace(
+      /{{([\s\S]*?)}}/g,
+      '<span class="secret">$1</span>'
+    );
+    return content;
+  }
 </script>
 
-<div
-  id="admin-wrapper"
-  style="height: 100%;"
->
+<div id="admin-wrapper" style="height: 100%;">
   <Header company="JOIASK" platformName="提问箱管理后台">
     <svelte:fragment slot="skip-to-content">
       <SkipToContent />
@@ -578,7 +586,9 @@
                   </Toolbar>
                   <svelte:fragment slot="cell" let:row let:cell>
                     {#if cell.key === "created_at"}
-                      <div>{miment(cell.value).format("YYYY-MM-DD hh:mm:ss")}</div>
+                      <div>
+                        {miment(cell.value).format("YYYY-MM-DD hh:mm:ss")}
+                      </div>
                     {:else if cell.key.startsWith("is")}
                       <Checkbox
                         checked={cell.value}
@@ -602,6 +612,10 @@
                           updateQuestion(row.id);
                         }}
                       />
+                    {:else if cell.key === "content"}
+                      <div style="max-width: 600px">
+                        {@html render(cell.value)}
+                      </div>
                     {:else}
                       <div style="max-width: 600px">{cell.value}</div>
                     {/if}
@@ -630,14 +644,15 @@
                             </Select>
                             <Button
                               size="small"
-                              on:click={()=>updateQuestion(row.id)}>保存</Button
+                              on:click={() => updateQuestion(row.id)}
+                              >保存</Button
                             >
                           </Row>
                         </FormGroup>
                       </Row>
                       <Row>
                         <FormGroup legendText="内容">
-                          <pre class="preview">{row.content}</pre>
+                          <pre class="preview">{@html render(row.content)}</pre>
                         </FormGroup>
                       </Row>
                       <Row>
@@ -708,7 +723,9 @@
               >
                 <svelte:fragment slot="cell" let:row let:cell>
                   {#if cell.key === "created_at"}
-                    <div>{miment(cell.value).format("YYYY-MM-DD hh:mm:ss")}</div>
+                    <div>
+                      {miment(cell.value).format("YYYY-MM-DD hh:mm:ss")}
+                    </div>
                   {:else if cell.key === "operation"}
                     <div>
                       <Button
@@ -727,7 +744,7 @@
                         iconDescription="删除话题"
                         kind="danger"
                         icon={TrashCan}
-                        on:click={()=>deleteTag(row.id)}
+                        on:click={() => deleteTag(row.id)}
                       />
                     </div>
                   {:else}
@@ -736,7 +753,6 @@
                 </svelte:fragment>
               </DataTable>
             </FormGroup>
-
           </TabContent>
           <TabContent>
             <FormGroup>
@@ -752,9 +768,13 @@
               >
                 <svelte:fragment slot="cell" let:row let:cell>
                   {#if cell.key === "created_at"}
-                    <div>{miment(cell.value).format("YYYY-MM-DD hh:mm:ss")}</div>
+                    <div>
+                      {miment(cell.value).format("YYYY-MM-DD hh:mm:ss")}
+                    </div>
                   {:else if cell.key === "updated_at"}
-                    <div>{miment(cell.value).format("YYYY-MM-DD hh:mm:ss")}</div>
+                    <div>
+                      {miment(cell.value).format("YYYY-MM-DD hh:mm:ss")}
+                    </div>
                   {:else if cell.key === "operation"}
                     <div>
                       <Button
@@ -774,7 +794,7 @@
                         iconDescription="删除用户"
                         kind="danger"
                         icon={TrashCan}
-                        on:click={()=>deleteUser(row.id)}
+                        on:click={() => deleteUser(row.id)}
                       />
                     </div>
                   {:else}
