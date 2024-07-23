@@ -38,3 +38,13 @@ body::-webkit-scrollbar {
 .svelte-images-gallery {
   justify-content: center;
 }
+
+.secret {
+  color: black;
+  background: black;
+  transition: all 0.5s;
+}
+
+.secret:hover {
+  color: white;
+}
