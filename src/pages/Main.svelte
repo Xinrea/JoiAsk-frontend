@@ -72,6 +72,8 @@
   function submitQuestion() {
     // Check Content
     let postContent = askContent.replace(/^\s+|\s+$/g, "");
+    // Replace full-width {}
+    postContent = postContent.replaceAll("｛", "{").replaceAll("｝", "}");
     if (postContent.length === 0) {
       alert("请输入有效的提问内容");
       return;
