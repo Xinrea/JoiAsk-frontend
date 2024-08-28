@@ -18,6 +18,19 @@
   let isUploading = false;
   export let loggedIn = false;
 
+  $:previewCard = {
+    id: 0,
+    created_at: new Date(),
+    updated_at: new Date(),
+    tag_id: tagValue ? tagValue.value.id : 0,
+    tag: tagValue ? tagValue.value : {},
+    content: "[卡片预览]\n" + askContent,
+    images_num: checkedImage ? 1 : 0,
+    images: "",
+    is_rainbow: checkedRainbow,
+    emojis: [],
+  };
+
   let announcement = "";
   onMount(() => {
     autosize(document.querySelector("textarea"));
@@ -214,6 +227,9 @@
         </div>
       {/if}
     </div>
+    {#if askContent.length > 0 && tagValue}
+      <PostCard data={previewCard} login={false} />
+    {/if}
     {#each cards as card}
       <PostCard data={card} login={loggedIn} on:message={handleImagePreview} />
     {/each}
