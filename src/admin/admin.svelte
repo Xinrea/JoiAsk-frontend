@@ -448,6 +448,7 @@
   }
 
   function render(content) {
+    content = content.replaceAll("｛", "{").replaceAll("｝", "}");
     // escape html tags
     content = content.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     // replace {{content}} as a <span> element, include \n

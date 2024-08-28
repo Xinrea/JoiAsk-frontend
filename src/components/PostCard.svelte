@@ -165,6 +165,7 @@
       e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight;
   }
   function render(content) {
+    content = content.replaceAll("｛", "{").replaceAll("｝", "}");
     // escape html tags
     content = content.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     // replace {{content}} as a <span> element, include \n
@@ -218,8 +219,7 @@
             >
               <div class="stamp__content" />
             </div>
-          {/if}
-          {@html render(data.content)}
+          {/if}{@html render(data.content)}
           {#if data.is_archive}
             <div
               class="watermark archived pointer-events-none"
