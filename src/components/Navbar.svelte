@@ -5,7 +5,8 @@
   let navroutes = {
     '提问': '/',
     '话题': '/tags',
-    '彩虹屁': '/rainbow'
+    '彩虹屁': '/rainbow',
+    '搜索': '/search'
   }
   function changeCurrent(event) {
     router.goto(navroutes[event.target.innerText])
@@ -19,6 +20,7 @@
   <TitleButton content="提问" {current} on:click={changeCurrent} />
   <TitleButton content="话题" {current} on:click={changeCurrent} />
   <TitleButton content="彩虹屁" {current} on:click={changeCurrent} />
+  <TitleButton content="搜索" {current} on:click={changeCurrent} />
   </div>
 </div>
 
