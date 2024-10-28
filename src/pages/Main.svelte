@@ -25,7 +25,7 @@
     tag_id: tagValue ? tagValue.value.id : 0,
     tag: tagValue ? tagValue.value : {},
     content: "[卡片预览]\n" + askContent,
-    images_num: checkedImage ? 1 : 0,
+    images_num: 0,
     images: "",
     is_rainbow: checkedRainbow,
     emojis: [],
@@ -156,6 +156,14 @@
         }
       });
   }
+  // handle to process image list for local preview
+  function handlePreview() {
+      let fs = pond.getFiles();
+      previewCard.images_num = fs.length;
+      previewCard.images = fs.map(f => {
+        return URL.createObjectURL(new Blob([f.file], { type: f.file.type }));
+      }).join(";");
+  }
   // Image preview
   function handleImagePreview(event) {
     console.log("image triggered");
@@ -218,6 +226,8 @@
           acceptedFileTypes={["image/*"]}
           maxFiles={6}
           maxFileSize={1048576}
+          onaddfile={handlePreview}
+          onremovefile={handlePreview}
         />
       {/if}
       {#if isUploading}
