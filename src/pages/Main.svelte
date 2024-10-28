@@ -117,7 +117,18 @@
       method: "POST",
       body: data,
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        if (res.status === 413) {
+          alert("图片太大，请缩小图片体积或者分开投稿");
+          isUploading = false;
+          throw("size of images is exceed the limit");
+        }
+        alert("投稿出现错误，Code: ", res.status);
+        throw("submit failed");
+      })
       .then((res) => {
         if (res.code === 200) {
           submitInfo = true;
