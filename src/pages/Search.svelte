@@ -113,7 +113,7 @@
     background-color: var(--inputColor) !important;
   }
 
-  .search:hover {
+  .search-btn:hover {
     background-color: theme("colors.primary / 80%") !important;
   }
 </style>
