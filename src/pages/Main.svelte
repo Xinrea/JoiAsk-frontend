@@ -18,7 +18,7 @@
   let isUploading = false;
   export let loggedIn = false;
 
-  $:previewCard = {
+  $: previewCard = {
     id: 0,
     created_at: new Date(),
     updated_at: new Date(),
@@ -48,17 +48,30 @@
   registerPlugin(
     FilePondPluginImageExifOrientation,
     FilePondPluginImagePreview,
-    FilePondPluginFileValidateType
+    FilePondPluginFileValidateType,
   );
   let pond;
   let name = "filepond";
+
+  // Filter params
+  const Order = {
+    ASC: "asc",
+    DESC: "desc",
+  };
+  const OrderItems = [
+    { label: "从新到旧", value: Order.DESC },
+    { label: "从旧到新", value: Order.ASC },
+  ];
+  let order = OrderItems[0];
 
   // Cards Fetch
   import InfiniteLoading from "svelte-infinite-loading";
   let cards = [];
   let page = 1;
   function fetchCards({ detail: { loaded, complete } }) {
-    fetch(`/api/question?page=${page}&size=5&publish=true`)
+    fetch(
+      `/api/question?page=${page}&size=5&publish=true&order_by=created_at&order=${order.value}`,
+    )
       .then((res) => res.json())
       .then((res) => {
         cards = cards.concat(res.data.questions);
@@ -124,10 +137,10 @@
         if (res.status === 413) {
           alert("图片太大，请缩小图片体积或者分开投稿");
           isUploading = false;
-          throw("size of images is exceed the limit");
+          throw "size of images is exceed the limit";
         }
         alert("投稿出现错误，Code: ", res.status);
-        throw("submit failed");
+        throw "submit failed";
       })
       .then((res) => {
         if (res.code === 200) {
@@ -158,11 +171,13 @@
   }
   // handle to process image list for local preview
   function handlePreview() {
-      let fs = pond.getFiles();
-      previewCard.images_num = fs.length;
-      previewCard.images = fs.map(f => {
+    let fs = pond.getFiles();
+    previewCard.images_num = fs.length;
+    previewCard.images = fs
+      .map((f) => {
         return URL.createObjectURL(new Blob([f.file], { type: f.file.type }));
-      }).join(";");
+      })
+      .join(";");
   }
   // Image preview
   function handleImagePreview(event) {
@@ -231,13 +246,9 @@
         />
       {/if}
       {#if isUploading}
-        <button class="ask__submit disabled">
-          上传中，请稍等
-        </button>
+        <button class="ask__submit disabled"> 上传中，请稍等 </button>
       {:else}
-        <button class="ask__submit" on:click={submitQuestion}>
-          提交
-        </button>
+        <button class="ask__submit" on:click={submitQuestion}> 提交 </button>
       {/if}
       {#if submitInfo}
         <div
@@ -251,11 +262,23 @@
     {#if askContent.length > 0 && tagValue}
       <PostCard data={previewCard} login={false} />
     {/if}
+    <div class="themed max-w-[600px] w-5/6 flex justify-end order-select">
+      <Select
+        items={OrderItems}
+        bind:value={order}
+        isClearable={false}
+        on:select={() => {
+          page = 1;
+          cards = [];
+        }}
+        isSearchable={false}
+      ></Select>
+    </div>
     {#each cards as card}
       <PostCard data={card} login={loggedIn} on:message={handleImagePreview} />
     {/each}
   </div>
-  <InfiniteLoading on:infinite={fetchCards}>
+  <InfiniteLoading on:infinite={fetchCards} identifier={order}>
     <div class="info" slot="noMore">已经到底啦( ´･･)ﾉ(._.`)</div>
     <div class="info" slot="noResults">已经到底啦( ´･･)ﾉ(._.`)</div>
   </InfiniteLoading>
@@ -286,9 +309,11 @@
       rgba(236, 11, 67, 0.33) 100%
     );
   }
+
   .tag_select {
     @apply flex flex-col mb-[10px] text-primary;
   }
+
   .themed {
     @apply block w-[140px] mb-[10px] text-primary;
     font-size: 12px;
@@ -315,6 +340,13 @@
     --indicatorColor: theme("colors.primary");
     --border: none;
     z-index: 9;
+  }
+
+  .order-select {
+    --background: white;
+    --indicatorTop: 5px;
+    --indicatorRight: 5px;
+    --selectedItemPadding: 0 10px 0 0;
   }
 
   .ask {
