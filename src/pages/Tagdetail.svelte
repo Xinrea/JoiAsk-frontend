@@ -4,6 +4,7 @@
   import InfiniteLoading from "svelte-infinite-loading";
   import PostCard from "../components/PostCard.svelte";
   import Select from "svelte-select";
+  import Toggle from "../components/Toggle.svelte";
   export let tag = 1;
   export let tag_name = "";
   export let loggedIn = false;
@@ -17,12 +18,15 @@
     { label: "从新到旧", value: Order.DESC },
     { label: "从旧到新", value: Order.ASC },
   ];
-  let order = OrderItems[0];
+  let filter = {
+    hideArchive: false,
+    order: OrderItems[0],
+  };
   let cards = [];
   let page = 1;
   function queryCards({ detail: { loaded, complete } }) {
     fetch(
-      `/api/question?tag_id=${tag}&page=${page}&size=5&publish=true&order_by=created_at&order=${order.value}`,
+      `/api/question?page=${page}&size=5&publish=true&order_by=created_at&order=${filter.order.value}${filter.hideArchive ? "&archive=false" : ""}`,
     )
       .then((response) => response.json())
       .then((res) => {
@@ -50,10 +54,18 @@
     <div class="watermark">
       #{tag_name}
     </div>
-    <div class="themed max-w-[600px] w-5/6 flex justify-end order-select">
+    <div class="themed max-w-[600px] w-5/6 flex justify-between order-select">
+      <Toggle
+        label="隐藏归档卡片"
+        bind:value={filter.hideArchive}
+        on:change={() => {
+          page = 1;
+          cards = [];
+        }}
+      />
       <Select
         items={OrderItems}
-        bind:value={order}
+        bind:value={filter.order}
         isClearable={false}
         on:select={() => {
           page = 1;
@@ -66,7 +78,7 @@
       <PostCard data={card} login={loggedIn} />
     {/each}
   </div>
-  <InfiniteLoading on:infinite={queryCards} identifier={order}>
+  <InfiniteLoading on:infinite={queryCards} identifier={filter}>
     <div class="info" slot="noMore">已经到底啦( ´･･)ﾉ(._.`)</div>
     <div class="info" slot="noResults">已经到底啦( ´･･)ﾉ(._.`)</div>
   </InfiniteLoading>
