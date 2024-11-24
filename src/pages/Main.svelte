@@ -74,7 +74,7 @@
   let page = 1;
   function fetchCards({ detail: { loaded, complete } }) {
     fetch(
-      `/api/question?page=${page}&size=5&publish=true&order_by=created_at&order=${filter.order.value}${filter.hideArchive ? "&archive=false" : ""}`,
+      `/api/question?page=${page}&size=5&publish=true&order_by=id&order=${filter.order.value}${filter.hideArchive ? "&archive=false" : ""}`,
     )
       .then((res) => res.json())
       .then((res) => {

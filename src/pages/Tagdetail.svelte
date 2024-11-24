@@ -26,7 +26,7 @@
   let page = 1;
   function queryCards({ detail: { loaded, complete } }) {
     fetch(
-      `/api/question?tag_id=${tag}&page=${page}&size=5&publish=true&order_by=created_at&order=${filter.order.value}${filter.hideArchive ? "&archive=false" : ""}`,
+      `/api/question?tag_id=${tag}&page=${page}&size=5&publish=true&order_by=id&order=${filter.order.value}${filter.hideArchive ? "&archive=false" : ""}`,
     )
       .then((response) => response.json())
       .then((res) => {
