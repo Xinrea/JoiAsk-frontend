@@ -50,7 +50,7 @@
 <Route path="/admin"><Admin /></Route>
 {#if previewURL.length > 0}
   <div
-    class="w-screen h-screen fixed top-0 left-0 bg-black z-[9999]"
+    class="w-screen h-screen fixed top-0 left-0 bg-black z-[9999] cursor-grab"
     on:mousedown={(e) => {
       mousedownPosX = e.clientX;
       mousedownPosY = e.clientY;

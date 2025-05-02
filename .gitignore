@@ -3,3 +3,4 @@ old
 public/build/*
 **/.DS_Store
 dist
+public/upload-img/*

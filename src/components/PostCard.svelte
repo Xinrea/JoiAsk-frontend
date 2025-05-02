@@ -1,6 +1,5 @@
 <script>
   import { router } from "tinro";
-  import { fade } from "svelte/transition";
   import { onMount } from "svelte";
   import EmojiPicker from "./EmojiPicker.svelte";
   export let data = {
@@ -28,11 +27,16 @@
   const maxDegree = 30;
   let cardContentElement;
   let imageList = [];
+  let showImageModal = false;
   let scrollEnd = false;
   onMount(() => {
     scrollEnd =
       cardContentElement.scrollTop + cardContentElement.clientHeight >=
       cardContentElement.scrollHeight;
+    // Initialize imageList if there are images
+    if (data.images_num > 0 && data.images) {
+      imageList = data.images.split(";");
+    }
   });
   function imagePreview(url) {
     window.callPreview(url);
@@ -177,91 +181,94 @@
   }
 </script>
 
-<div
-  class="flex flex-row w-full overflow-x-auto overflow-y-visible p-6"
-  class:justify-center={imageList.length === 0}
->
-  <div
-    class="card-wrap relative rotatable rounded-md overflow-hidden w-5/6 min-h-[300px] min-w-[283px] md:h-[346px] md:w-[600px]"
-    style="--x: {x}; --y: {y}; --rx: {rx}; --ry: {ry}; --d: {d}; --hyp: {hyp}; --px:{px}; --py:{py}"
-    on:mousemove={handleCardMouseMove}
-    on:mouseleave={mouseMoveOut}
-    on:mouseenter={mouseMoveIn}
-  >
-    <div class="card h-full w-full" class:special={data.is_rainbow}>
+<div class="flex flex-col w-full p-6 justify-center items-center">
+  <div class="w-full md:w-auto flex flex-col items-center">
+    <div
+      class="card-wrap relative h-[346px] w-full md:w-[600px]"
+      style="--x: {x}; --y: {y}; --rx: {rx}; --ry: {ry}; --d: {d}; --hyp: {hyp}; --px:{px}; --py:{py}"
+      on:mousemove={handleCardMouseMove}
+      on:mouseleave={mouseMoveOut}
+      on:mouseenter={mouseMoveIn}
+    >
       <div
-        class="watermark cursor-pointer"
-        on:click={() =>
-          router.goto(
-            "/tags?tag=" + data.tag_id + "&tag_name=" + data.tag.tag_name
-          )}
+        class="card h-full w-full rounded-md overflow-hidden"
+        class:special={data.is_rainbow}
       >
-        #{data.tag.tag_name}
-      </div>
-      <div class="card-header">#{data.id} | {postTime()}</div>
-      <div
-        class="card-content"
-        class:more={!scrollEnd}
-        bind:this={cardContentElement}
-        on:scroll={handleScroll}
-      >
-        <div>
-          {#if data.images_num > 0}
+        <div
+          class="watermark cursor-pointer"
+          on:click={() =>
+            router.goto(
+              "/tags?tag=" + data.tag_id + "&tag_name=" + data.tag.tag_name
+            )}
+        >
+          #{data.tag.tag_name}
+        </div>
+        <div class="card-header">#{data.id} | {postTime()}</div>
+        <div
+          class="card-content"
+          class:more={!scrollEnd}
+          bind:this={cardContentElement}
+          on:scroll={handleScroll}
+        >
+          <div>
+            {#if data.images_num > 0}
+              <div
+                class="stamp"
+                on:click={() => {
+                  showImageModal = true;
+                }}
+              >
+                <div class="stamp__content" data-count={data.images_num} />
+              </div>
+            {/if}{@html render(data.content)}
+            {#if data.is_archive}
+              <div
+                class="watermark archived pointer-events-none"
+                style="--watermark-color: red; transform: rotate(10deg) scale(1.2); top: 70%; left: 20%;"
+              >
+                已归档
+              </div>
+            {/if}
+          </div>
+        </div>
+        <div class="card-footer">
+          <EmojiPicker data={emojis} questionID={data.id} />
+          {#if login && !data.is_archive}
             <div
-              class="stamp"
-              on:click={() => {
-                if (imageList.length === 0) {
-                  imageList = data.images.split(";");
-                } else {
-                  imageList = [];
-                }
-              }}
+              class="cursor-pointer inline-block select-none"
+              style="border: 1px dotted gray; border-radius: 3px; padding: 0.1rem;"
+              on:click={archive}
             >
-              <div class="stamp__content" />
-            </div>
-          {/if}{@html render(data.content)}
-          {#if data.is_archive}
-            <div
-              class="watermark archived pointer-events-none"
-              style="--watermark-color: red; transform: rotate(10deg) scale(1.2); top: 70%; left: 20%;"
-            >
-              已归档
+              归档此卡
             </div>
           {/if}
         </div>
-      </div>
-      <div class="card-footer">
-        <EmojiPicker data={emojis} questionID={data.id} />
-        {#if login && !data.is_archive}
-          <div
-            class="cursor-pointer inline-block select-none"
-            style="border: 1px dotted gray; border-radius: 3px; padding: 0.1rem;"
-            on:click={archive}
-          >
-            归档此卡
+        {#if showImageModal}
+          <div class="modal-overlay" on:click={() => (showImageModal = false)}>
+            <div class="modal-content" on:click|stopPropagation>
+              <div class="grid grid-cols-3 gap-3">
+                {#each imageList as image, index}
+                  <div class="modal-image-container rounded-lg">
+                    <img
+                      src={image}
+                      alt={`Image ${index + 1}`}
+                      class="modal-image"
+                      on:click={() => {
+                        imagePreview(image);
+                      }}
+                    />
+                  </div>
+                {/each}
+              </div>
+            </div>
           </div>
         {/if}
       </div>
+      {#if data.is_rainbow}
+        <div class="texture-illusion" />
+        <div class="texture-noise" />
+      {/if}
     </div>
-    {#if data.is_rainbow}
-      <div class="texture-illusion" />
-      <div class="texture-noise" />
-    {/if}
-  </div>
-  <div class="flex flex-row flex-nowrap overflow-y-visible">
-    {#each imageList as image}
-      <div class="min-w-[200px] ml-3 last:mx-3">
-        <img
-          src={image}
-          class="rounded-md shadow-lg max-h-[346px] cursor-pointer"
-          transition:fade
-          alt=""
-          on:click={() => {
-            imagePreview(image);
-          }}
-        />
-      </div>
-    {/each}
   </div>
 </div>
 
@@ -269,6 +276,7 @@
   .card {
     @apply bg-card shadow-lg p-4 text-slate-400 flex flex-col justify-between;
     content-visibility: auto;
+    transition: height 0.3s ease;
   }
 
   @media (min-width: 720px) {
@@ -386,6 +394,24 @@
     @apply bg-white w-full h-full text-slate-400 flex flex-col justify-between;
     background-image: url("../assets/image_stamp.png");
     background-size: cover;
+    position: relative;
+  }
+
+  .stamp__content::after {
+    content: attr(data-count);
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
   }
 
   .special {
@@ -443,5 +469,63 @@
     background-size: 50%;
     mix-blend-mode: color-dodge;
     opacity: 0.5;
+  }
+
+  .gallery-container {
+    @apply w-full overflow-hidden mt-2;
+  }
+
+  .image-gallery {
+    @apply bg-card px-4 rounded-lg shadow-lg relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  .image-container {
+    @apply relative overflow-hidden rounded-lg;
+    width: 100px;
+    height: 100px;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+  }
+
+  .modal-content {
+    padding: 0.5rem;
+    width: 300px;
+    height: auto;
+  }
+
+  .modal-image-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .modal-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+
+  .modal-image:hover {
+    transform: scale(1.05);
   }
 </style>
