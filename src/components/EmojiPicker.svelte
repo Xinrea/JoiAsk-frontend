@@ -41,6 +41,7 @@
     "🥺": "emojis/111.png",
     "👻": "emojis/187.png",
     "😅": null,
+    "🌹": "emojis/63.png",
   };
   export let questionID;
   export let data = [];
