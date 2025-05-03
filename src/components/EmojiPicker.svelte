@@ -101,7 +101,7 @@
 </script>
 
 <div class="picker inline-block select-none">
-  <div class="panel flex flex-row" class:invisible={!panel.open}>
+  <div class="panel grid grid-cols-4" class:invisible={!panel.open}>
     {#each emojis as { id, value, asset }}
       <div class="emoji-button" on:click={postEmoji(value)}>
         {#if asset}
