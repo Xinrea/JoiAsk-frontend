@@ -1,7 +1,9 @@
 <script>
   import { router } from "tinro";
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import EmojiPicker from "./EmojiPicker.svelte";
+  import { emojiStore } from "../stores/emojiStore";
+
   export let data = {
     id: 1,
     created_at: "2022-08-08T02:43:52.064917+08:00",
@@ -29,15 +31,7 @@
   let imageList = [];
   let showImageModal = false;
   let scrollEnd = false;
-  onMount(() => {
-    scrollEnd =
-      cardContentElement.scrollTop + cardContentElement.clientHeight >=
-      cardContentElement.scrollHeight;
-    // Initialize imageList if there are images
-    if (data.images_num > 0 && data.images) {
-      imageList = data.images.split(";");
-    }
-  });
+
   function imagePreview(url) {
     window.callPreview(url);
   }

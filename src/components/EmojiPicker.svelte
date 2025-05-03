@@ -1,4 +1,7 @@
 <script>
+  import { emojiStore } from "../stores/emojiStore";
+  import { onMount } from "svelte";
+
   let emojis = [
     { id: 0, value: "👍", asset: "emojis/76.png" },
     { id: 1, value: "👎", asset: "emojis/77.png" },
@@ -49,10 +52,22 @@
     open: false,
   };
   let posted = false;
+
+  // Initialize emoji data in store when component is mounted
+  onMount(() => {
+    console.log(data);
+    emojiStore.subscribe((store) => {
+      if (store[questionID]) {
+        data = store[questionID];
+      }
+    });
+  });
+
   function togglePanel() {
     panel.open = !panel.open;
     console.log("toggle emoji panel");
   }
+
   function doPostEmoji(value) {
     panel.open = false;
     if (posted) {
@@ -69,29 +84,18 @@
       .then((res) => {
         if (res.code === 200) {
           posted = true;
-          let added = false;
-          for (var i = 0; i < data.length; i++) {
-            if (data[i].value == value) {
-              data[i].count++;
-              added = true;
-            }
-          }
-          if (!added) {
-            data.push({ value: value, count: 1 });
-          }
-          data = data.sort((a, b) => {
-            return b.count - a.count;
-          });
         } else {
           console.error(res);
         }
       });
   }
+
   function postEmoji(value) {
     return () => {
       doPostEmoji(value);
     };
   }
+
   data = data.sort((a, b) => {
     return b.count - a.count;
   });

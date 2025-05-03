@@ -8,6 +8,9 @@
   import Admin from "./admin/admin.svelte";
   import Zoom from "svelte-zoom";
   import Search from "./pages/Search.svelte";
+  import { emojiStore } from "./stores/emojiStore";
+  import { onDestroy } from "svelte";
+
   let previewURL = "";
   let mousedownPosX;
   let mousedownPosY;
@@ -31,6 +34,30 @@
       });
   }
   auth();
+
+  // Create SSE connection
+  const sse = new EventSource("/api/sse");
+  sse.onopen = () => {
+    console.log("SSE connection opened");
+  };
+  sse.addEventListener("emoji", (event) => {
+    console.log(event);
+    try {
+      const data = JSON.parse(event.data);
+      console.log(data);
+      emojiStore.update((store) => ({
+        ...store,
+        [data.card_id]: data.emojis,
+      }));
+    } catch (e) {
+      console.error("Failed to parse SSE message:", e);
+    }
+  });
+
+  // Cleanup on component destroy
+  onDestroy(() => {
+    sse.close();
+  });
 </script>
 
 <Route path="/"><Main {loggedIn} /></Route>
