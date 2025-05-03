@@ -187,7 +187,7 @@
 <div class="flex flex-col w-full p-6 justify-center items-center">
   <div class="w-full md:w-auto flex flex-col items-center">
     <div
-      class="card-wrap relative h-[346px] w-full md:w-[600px]"
+      class="card-wrap relative rotatable h-[346px] w-full md:w-[600px]"
       style="--x: {x}; --y: {y}; --rx: {rx}; --ry: {ry}; --d: {d}; --hyp: {hyp}; --px:{px}; --py:{py}"
       on:mousemove={handleCardMouseMove}
       on:mouseleave={mouseMoveOut}
@@ -279,7 +279,6 @@
   .card {
     @apply bg-card shadow-lg p-4 text-slate-400 flex flex-col justify-between;
     content-visibility: auto;
-    transition: height 0.3s ease;
   }
 
   @media (min-width: 720px) {
