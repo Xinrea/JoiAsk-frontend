@@ -55,7 +55,6 @@
 
   // Initialize emoji data in store when component is mounted
   onMount(() => {
-    console.log(data);
     emojiStore.subscribe((store) => {
       if (store[questionID]) {
         data = store[questionID];

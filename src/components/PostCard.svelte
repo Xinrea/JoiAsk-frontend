@@ -1,9 +1,7 @@
 <script>
   import { router } from "tinro";
-  import { onMount, onDestroy } from "svelte";
   import EmojiPicker from "./EmojiPicker.svelte";
-  import { emojiStore } from "../stores/emojiStore";
-
+  import { onMount } from "svelte";
   export let data = {
     id: 1,
     created_at: "2022-08-08T02:43:52.064917+08:00",
@@ -32,9 +30,20 @@
   let showImageModal = false;
   let scrollEnd = false;
 
+  onMount(() => {
+    scrollEnd =
+      cardContentElement.scrollTop + cardContentElement.clientHeight >=
+      cardContentElement.scrollHeight;
+    // Initialize imageList if there are images
+    if (data.images_num > 0 && data.images) {
+      imageList = data.images.split(";");
+    }
+  });
+
   function imagePreview(url) {
     window.callPreview(url);
   }
+
   function postTime() {
     let postTimestamp = new Date(data.created_at) / 1000;
     let unit = "秒";

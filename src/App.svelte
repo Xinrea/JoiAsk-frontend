@@ -41,7 +41,6 @@
     console.log("SSE connection opened");
   };
   sse.addEventListener("emoji", (event) => {
-    console.log(event);
     try {
       const data = JSON.parse(event.data);
       console.log(data);
