@@ -46,7 +46,7 @@
       console.log(data);
       emojiStore.update((store) => ({
         ...store,
-        [data.card_id]: data.emojis,
+        [data.Data.card_id]: data.Data.emojis,
       }));
     } catch (e) {
       console.error("Failed to parse SSE message:", e);
