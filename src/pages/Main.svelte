@@ -183,6 +183,7 @@
         return URL.createObjectURL(new Blob([f.file], { type: f.file.type }));
       })
       .join(";");
+    console.log(previewCard.images);
   }
   // Image preview
   function handleImagePreview(event) {

@@ -26,7 +26,7 @@
   export let login = false;
   const maxDegree = 30;
   let cardContentElement;
-  let imageList = [];
+  $: imageList = data.images != "" ? data.images.split(";") : [];
   let showImageModal = false;
   let scrollEnd = false;
 
@@ -34,10 +34,6 @@
     scrollEnd =
       cardContentElement.scrollTop + cardContentElement.clientHeight >=
       cardContentElement.scrollHeight;
-    // Initialize imageList if there are images
-    if (data.images_num > 0 && data.images) {
-      imageList = data.images.split(";");
-    }
   });
 
   function imagePreview(url) {
