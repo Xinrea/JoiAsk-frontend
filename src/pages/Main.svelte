@@ -34,10 +34,15 @@
 
   let announcement = "";
   onMount(() => {
+    askContent = localStorage.getItem("ask_content") || "";
     autosize(document.querySelector("textarea"));
     initTagSelection();
     getConfig();
   });
+
+  function contentChange(e) {
+    localStorage.setItem("ask_content", e.target.value);
+  }
 
   // FilePond
   import FilePond, { registerPlugin } from "svelte-filepond";
@@ -151,6 +156,7 @@
         if (res.code === 200) {
           submitInfo = true;
           askContent = "";
+          localStorage.setItem("ask_content", "");
           tagValue = null;
           checkedRainbow = false;
           checkedImage = false;
@@ -220,6 +226,7 @@
           maxlength="800"
           bind:value={askContent}
           class:rainbow={checkedRainbow}
+          on:input={contentChange}
         />
       </div>
       <div class="checks">
