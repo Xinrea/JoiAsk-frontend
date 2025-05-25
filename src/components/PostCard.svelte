@@ -2,6 +2,7 @@
   import { router } from "tinro";
   import EmojiPicker from "./EmojiPicker.svelte";
   import { onMount } from "svelte";
+  import { archiveStore } from "../stores/archiveStore";
   export let data = {
     id: 1,
     created_at: "2022-08-08T02:43:52.064917+08:00",
@@ -34,6 +35,12 @@
     scrollEnd =
       cardContentElement.scrollTop + cardContentElement.clientHeight >=
       cardContentElement.scrollHeight;
+
+    archiveStore.subscribe((store) => {
+      if (store[data.id]) {
+        data.is_archive = true;
+      }
+    });
   });
 
   function imagePreview(url) {

@@ -9,6 +9,7 @@
   import Zoom from "svelte-zoom";
   import Search from "./pages/Search.svelte";
   import { emojiStore } from "./stores/emojiStore";
+  import { archiveStore } from "./stores/archiveStore";
   import { onDestroy } from "svelte";
 
   let previewURL = "";
@@ -44,10 +45,17 @@
     try {
       const data = JSON.parse(event.data);
       console.log(data);
-      emojiStore.update((store) => ({
-        ...store,
-        [data.Data.card_id]: data.Data.emojis,
-      }));
+      if (data.Type == 1) {
+        emojiStore.update((store) => ({
+          ...store,
+          [data.Data.card_id]: data.Data.emojis,
+        }));
+      } else {
+        archiveStore.update((store) => ({
+          ...store,
+          [data.Data]: true,
+        }));
+      }
     } catch (e) {
       console.error("Failed to parse SSE message:", e);
     }
